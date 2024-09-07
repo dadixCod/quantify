@@ -30,6 +30,7 @@ class MainApp extends StatelessWidget {
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(builder: (context, mode) {
         return MaterialApp(
+          title: 'QUANTIFY',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
           themeMode: mode,
