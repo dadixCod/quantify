@@ -1,13 +1,11 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quantify/core/constants/app_colors.dart';
 import 'package:quantify/core/utils/context.dart';
-import 'package:quantify/features/main/presentation/main_screen.dart';
 import 'package:quantify/features/onboarding/data/sources/onboarding_list.dart';
-import 'package:quantify/shared/thememode/theme_cubit.dart';
+import 'package:quantify/features/onboarding/presentation/blocs/on_boarding_cubit.dart';
 import 'package:quantify/shared/widgets/main_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -40,8 +38,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
   Widget build(BuildContext context) {
     final height = context.deviceSize.height;
     final width = context.deviceSize.width;
-    final mode = BlocProvider.of<ThemeCubit>(context).state;
+    final brightness = context.brightness;
     return Scaffold(
+    
       body: Container(
         height: height,
         width: width,
@@ -71,7 +70,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           height: height * 0.25,
                           width: width,
                           child: SvgPicture.asset(
-                            mode == ThemeMode.light
+                            brightness == Brightness.light
                                 ? item.image
                                 : item.darkImage,
                           ),
@@ -116,7 +115,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         spacing: 6.0,
                         radius: 10.0,
                         dotWidth: 15.0,
-                        dotHeight: 10.0,
+                        dotHeight: 6.0,
                         expansionFactor: 3.0,
                         dotColor: AppColors.inactiveItem,
                         activeDotColor: AppColors.maincolor,
@@ -145,11 +144,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
                               Future.delayed(const Duration(seconds: 2))
                                   .then((value) {
                                 isLoading = false;
-                                Navigator.of(context).pushReplacement(
-                                  CupertinoPageRoute(
-                                    builder: (context) => const MainScreen(),
-                                  ),
-                                );
+                                context
+                                    .read<OnBoardingCubit>()
+                                    .changeOnBoardingStatus();
+
+                                Navigator.of(context)
+                                    .pushReplacementNamed('/shop_data');
                               });
                             });
                           } else {
@@ -167,7 +167,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                               width: 30,
                               child: CircularProgressIndicator(
                                 color: Colors.white,
-                              ))
+                              ),
+                            )
                           : Text(
                               currentPage == 2 ? 'Continue' : 'Next',
                               style: const TextStyle(
