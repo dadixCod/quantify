@@ -13,14 +13,18 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.6
+  flutter_native_splash: ^2.4.1
+  flutter_slidable_panel: ^1.1.4
   flutter_svg: ^2.0.10+1
   flutter_xlider: ^3.5.0
   get_it: ^7.7.0
   hydrated_bloc: ^9.1.5
   intl: ^0.19.0
   intl_phone_number_input: ^0.7.4
+  lottie: ^3.1.2
   path: ^1.9.0
   path_provider: ^2.1.4
+  rive: ^0.13.13
   shared_preferences: ^2.3.2
   smooth_page_indicator: ^1.2.0+3
   sqflite: ^2.3.3+1
@@ -37,6 +41,8 @@ flutter:
     - assets/images/
     - assets/fonts/
     - assets/vectors/
+    - assets/lottie/
+    - assets/rive/
 
   fonts:
     - family: Poppins
@@ -59,3 +65,22 @@ flutter:
           weight: 800
         - asset: assets/fonts/Poppins-Black.ttf
           weight: 900
+
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/logo.png
+  branding: assets/images/quantify.png
+  color_dark: "#393939"
+  image_dark: assets/images/logo-dark.png
+  branding_dark: assets/images/quantify-white.png
+
+  android_12:
+    image: assets/images/new-logo.png
+    icon_background_color: "#6C63FF"
+    image_dark: assets/images/new-logo-dark.png
+    icon_background_color_dark: "#ffffff"
+
+  android: true
+  ios: true
+  web: false

@@ -6,4 +6,5 @@ extension BuildContextExtension on BuildContext {
   TextTheme get textTheme => theme.textTheme;
   ColorScheme get colorScheme => theme.colorScheme;
   Size get deviceSize => MediaQuery.sizeOf(this);
+  NavigatorState get navigator => Navigator.of(this);
 }

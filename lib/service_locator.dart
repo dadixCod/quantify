@@ -1,4 +1,7 @@
 import 'package:get_it/get_it.dart';
+import 'package:quantify/features/dashboard/data/repository/ticket_repo_impl.dart';
+import 'package:quantify/features/dashboard/data/sources/ticket_sources.dart';
+import 'package:quantify/features/dashboard/domain/repository/ticket_repository.dart';
 import 'package:quantify/features/onboarding/data/repository/on_boarding_repo_impl.dart';
 import 'package:quantify/features/onboarding/domain/repository/on_boarding_repo.dart';
 import 'package:quantify/features/onboarding/domain/usecase/change_onboarding_status_usecase.dart';
@@ -35,4 +38,10 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<GetShopDataUsecase>(GetShopDataUsecase(sl()));
   sl.registerSingleton<AddShopUsecase>(AddShopUsecase(sl()));
   sl.registerSingleton<UpdateShopUsecase>(UpdateShopUsecase(sl()));
+
+  //Dashboard
+  sl.registerSingleton<TicketSources>(TicketSources(sl()));
+  sl.registerSingleton<TicketRepository>(TicketRepositoryImpl(sl()));
+
+  
 }

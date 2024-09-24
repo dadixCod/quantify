@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quantify/features/main/presentation/main_screen.dart';
+import 'package:quantify/features/main/presentation/pages/main_page.dart';
 import 'package:quantify/features/onboarding/presentation/blocs/on_boarding_cubit.dart';
 import 'package:quantify/features/onboarding/presentation/onboarding_page.dart';
 import 'package:quantify/features/shop_data/presentation/blocs/shop_bloc.dart';
@@ -21,7 +21,7 @@ class InitialPage extends StatelessWidget {
                 if (state is ShopNull) {
                   return const ShopDataPage();
                 } else if (state is ShopLoaded) {
-                  return const MainScreen();
+                  return const MainPage();
                 }
                 return const Center(
                   child: CircularProgressIndicator(),

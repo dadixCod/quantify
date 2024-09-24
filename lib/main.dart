@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:quantify/core/configs/app_router.dart';
 import 'package:quantify/core/theme/app_theme.dart';
+import 'package:quantify/features/drawer/presentation/cubit/drawer_cubit.dart';
+import 'package:quantify/features/main/presentation/blocs/drawer_cubit.dart';
 import 'package:quantify/features/onboarding/presentation/blocs/on_boarding_cubit.dart';
 import 'package:quantify/features/shop_data/presentation/blocs/shop_bloc.dart';
 import 'package:quantify/features/shop_data/presentation/blocs/shop_event.dart';
@@ -46,7 +48,15 @@ class MainApp extends StatelessWidget {
         BlocProvider(
           create: (context) => ShopBloc()..add(GetShopData()),
           lazy: false,
-        )
+        ),
+        BlocProvider(
+          create: (context) => DrawerItemCubit(),
+          lazy: false,
+        ),
+        BlocProvider(
+          create: (context) => DrawerCubit(),
+          lazy: false,
+        ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         buildWhen: (previous, current) {

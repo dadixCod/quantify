@@ -7,6 +7,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_xlider/flutter_xlider.dart';
+import 'package:quantify/core/configs/app_router.dart';
 
 import 'package:quantify/core/constants/app_colors.dart';
 import 'package:quantify/core/constants/app_vectors.dart';
@@ -86,7 +87,6 @@ class _ShopDataPageState extends State<ShopDataPage> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-     
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -102,9 +102,7 @@ class _ShopDataPageState extends State<ShopDataPage> {
                 child: FadeInDown(
                   delay: const Duration(milliseconds: 300),
                   child: SvgPicture.asset(
-                    context.brightness == Brightness.light
-                        ? AppVectors.topBubble
-                        : AppVectors.topBubbleDark,
+                    context.brightness == Brightness.light ? AppVectors.topBubble : AppVectors.topBubbleDark,
                   ),
                 ),
               ),
@@ -114,19 +112,13 @@ class _ShopDataPageState extends State<ShopDataPage> {
                 child: IconButton(
                   onPressed: () {
                     context.read<ThemeCubit>().updateTheme(
-                          context.brightness == Brightness.light
-                              ? ThemeMode.dark
-                              : ThemeMode.light,
+                          context.brightness == Brightness.light ? ThemeMode.dark : ThemeMode.light,
                         );
                   },
                   icon: SvgPicture.asset(
-                    context.brightness == Brightness.light
-                        ? AppVectors.moonStars
-                        : AppVectors.sun,
+                    context.brightness == Brightness.light ? AppVectors.moonStars : AppVectors.sun,
                     colorFilter: ColorFilter.mode(
-                      context.brightness == Brightness.light
-                          ? AppColors.darkBgColor
-                          : AppColors.fadeColor,
+                      context.brightness == Brightness.light ? AppColors.darkBgColor : AppColors.fadeColor,
                       BlendMode.srcIn,
                     ),
                     height: 25,
@@ -177,9 +169,7 @@ class _ShopDataPageState extends State<ShopDataPage> {
                                 duration: const Duration(milliseconds: 300),
                                 width: width / 5.18,
                                 decoration: BoxDecoration(
-                                  color: currentPage == index
-                                      ? AppColors.maincolor
-                                      : AppColors.inactiveItem,
+                                  color: currentPage == index ? AppColors.maincolor : AppColors.inactiveItem,
                                   borderRadius: BorderRadius.circular(999),
                                 ),
                               );
@@ -205,8 +195,7 @@ class _ShopDataPageState extends State<ShopDataPage> {
                         ),
                       ),
                       MainButton(
-                        child: BlocBuilder<ShopBloc, ShopState>(
-                            builder: (context, state) {
+                        child: BlocBuilder<ShopBloc, ShopState>(builder: (context, state) {
                           if (state is ShopLoading) {
                             return const SizedBox(
                               height: 30,
@@ -226,11 +215,10 @@ class _ShopDataPageState extends State<ShopDataPage> {
                                 );
                               },
                             );
-                          } else if (state is ShopAdded) {
+                          } else if (state is ShopAdded || state is ShopLoaded) {
                             SchedulerBinding.instance.addPostFrameCallback(
                               (_) {
-                                Navigator.of(context)
-                                    .pushReplacementNamed('/main');
+                                Navigator.of(context).pushReplacementNamed(AppRouter.mainPage);
                               },
                             );
                           }
@@ -248,20 +236,16 @@ class _ShopDataPageState extends State<ShopDataPage> {
                             navigateToPage(1);
                           } else if (currentPage == 1) {
                             navigateToPage(2);
-                          } else if (currentPage == 2 &&
-                              isStartingNotNull == true &&
-                              isValidPhone == true) {
+                          } else if (currentPage == 2 && isStartingNotNull == true && isValidPhone == true) {
                             log(phoneNumber);
                             navigateToPage(3);
                           } else if (currentPage == 3) {
                             final shop = ShopEntity(
                               shopName: _shopNameController.text,
                               phoneNumber: phoneNumber,
-                              address: _addressController.text.isNotEmpty
-                                  ? _addressController.text
-                                  : '',
-                              startHour: _formatTime(_upperValue.toInt()),
-                              endHour: _formatTime(_lowerValue.toInt()),
+                              address: _addressController.text.isNotEmpty ? _addressController.text : '',
+                              startHour: _formatTime(_lowerValue.toInt()),
+                              endHour: _formatTime(_upperValue.toInt()),
                             );
                             context.read<ShopBloc>().add(AddShop(shop: shop));
                           }
@@ -381,14 +365,13 @@ class _ShopDataPageState extends State<ShopDataPage> {
                 decoration: BoxDecoration(
                   // color: Colors.white,
                   border: Border.all(
-                    color: context.brightness == Brightness.dark
-                        ? AppColors.borderDarkColor
-                        : AppColors.borderColor,
+                    color: context.brightness == Brightness.dark ? AppColors.borderDarkColor : AppColors.borderColor,
                   ),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: CountryCodePicker(
                   initialSelection: 'DZ',
+                  dialogBackgroundColor: context.brightness == Brightness.dark ? AppColors.darkBgColor : AppColors.bgColor,
                   onInit: (value) {
                     phoneCode = value!.dialCode!;
                   },

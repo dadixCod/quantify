@@ -8,5 +8,17 @@ class AppVectors {
   static const check = 'assets/vectors/check.svg';
   static const sun = 'assets/vectors/sun.svg';
   static const moonStars = 'assets/vectors/moon_stars.svg';
+  static const bell = 'assets/vectors/bell.svg';
+  static const pencil = 'assets/vectors/pencil.svg';
+  static const pencilEdit = 'assets/vectors/pencil_edit.svg';
+  static const dashboard = 'assets/vectors/dashboard.svg';
+  static const clients = 'assets/vectors/clients.svg';
+  static const statistics = 'assets/vectors/statistics.svg';
+  static const settings = 'assets/vectors/settings.svg';
+  static const logout = 'assets/vectors/logout.svg';
+  static const profile = 'assets/vectors/profile.svg';
+  static const support = 'assets/vectors/support.svg';
+  static const call = 'assets/vectors/call.svg';
+  static const delete = 'assets/vectors/delete.svg';
 }
 
