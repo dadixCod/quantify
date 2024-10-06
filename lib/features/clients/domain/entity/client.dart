@@ -4,6 +4,7 @@ class ClientEntity {
   final String phone;
   int? visits;
   double? totalSpent;
+  double? dept;
 
   ClientEntity({
     this.id,
@@ -11,5 +12,6 @@ class ClientEntity {
     required this.phone,
     this.visits,
     this.totalSpent,
+    this.dept,
   });
 }

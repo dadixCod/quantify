@@ -1,8 +1,8 @@
 import 'package:quantify/features/clients/data/model/client.dart';
 import 'package:quantify/features/clients/data/sources/clients_datasource.dart';
 import 'package:quantify/features/clients/domain/entity/client.dart';
-import 'package:quantify/features/clients/domain/entity/update_client_data.dart';
 import 'package:quantify/features/clients/domain/repository/clients_repository.dart';
+import 'package:quantify/features/clients/shared/update_client_data.dart';
 
 class ClientsRepositoryImpl extends ClientsRepository {
   final ClientsDatasource datasource;

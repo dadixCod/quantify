@@ -6,9 +6,12 @@ class TicketsLoading extends TicketsState {}
 
 class TicketsLoaded extends TicketsState {
   final List<TicketEntity> doneTickets;
-  final List<TicketEntity> undoneTickets;
+  final List<TicketEntity> pendingTickets;
 
-  TicketsLoaded({required this.doneTickets, required this.undoneTickets});
+  TicketsLoaded({
+    required this.doneTickets,
+    required this.pendingTickets,
+  });
 }
 
 class TicketsError extends TicketsState {
@@ -17,11 +20,12 @@ class TicketsError extends TicketsState {
   TicketsError({required this.message});
 }
 
-
-
 class TicketActionLoading extends TicketsState {}
+
 class AddTicketDone extends TicketsState {}
+
 class DeleteTicketDone extends TicketsState {}
+
 class UpdateTicketDone extends TicketsState {}
 
 class TicketActionErreur extends TicketsState {
@@ -29,10 +33,3 @@ class TicketActionErreur extends TicketsState {
 
   TicketActionErreur({required this.message});
 }
-
-
-
-
-
-
-

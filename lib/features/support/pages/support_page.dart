@@ -5,6 +5,6 @@ class SupportPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text('Support'),),);
+    return const Scaffold(body: Center(child: Text('Support'),),);
   }
 }

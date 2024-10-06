@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 class TicketEntity {
@@ -9,10 +10,10 @@ class TicketEntity {
   final int clientId;
   final String clientName;
   final String clientPhone;
-  final bool isDone;
+   bool isDone;
 
   TicketEntity({
-     this.id,
+    this.id,
     this.number,
     required this.date,
     required this.time,
@@ -22,4 +23,30 @@ class TicketEntity {
     required this.clientPhone,
     this.isDone = false,
   });
+
+  
+
+  TicketEntity copyWith({
+    int? id,
+    int? number,
+    String? date,
+    TimeOfDay? time,
+    double? price,
+    int? clientId,
+    String? clientName,
+    String? clientPhone,
+    bool? isDone,
+  }) {
+    return TicketEntity(
+      id: id ?? this.id,
+      number: number ?? this.number,
+      date: date ?? this.date,
+      time: time ?? this.time,
+      price: price ?? this.price,
+      clientId: clientId ?? this.clientId,
+      clientName: clientName ?? this.clientName,
+      clientPhone: clientPhone ?? this.clientPhone,
+      isDone: isDone ?? this.isDone,
+    );
+  }
 }

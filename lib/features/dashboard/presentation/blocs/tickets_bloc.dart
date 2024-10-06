@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quantify/features/dashboard/domain/usecase/add_ticket.dart';
 import 'package:quantify/features/dashboard/domain/usecase/delete_ticket.dart';
@@ -14,10 +16,13 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
       try {
         final doneTickets =
             await sl<GetDoneTicketsUseCase>().call(params: event.date);
-        final undoneTickets =
+        final pendingTickets =
             await sl<GetUndoneTicketsUseCase>().call(params: event.date);
+
+        log(pendingTickets.toString());
+        log(doneTickets.toString());
         emit(TicketsLoaded(
-            doneTickets: doneTickets, undoneTickets: undoneTickets));
+            doneTickets: doneTickets, pendingTickets: pendingTickets));
       } catch (e) {
         emit(TicketsError(message: e.toString()));
       }

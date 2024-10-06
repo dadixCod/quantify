@@ -25,7 +25,7 @@ class TicketModel extends TicketEntity {
       clientId: data['clientId'],
       clientName: data['clientName'],
       clientPhone: data['clientPhone'],
-      isDone: data['isDone'] == 1 ? true : false, 
+      isDone: data['isDone'] == 1 ? true : false,
     );
   }
 
@@ -35,10 +35,10 @@ class TicketModel extends TicketEntity {
       'date': date,
       'time': '${time.hour}:${time.minute}',
       'price': price,
-      'clientId':clientId,
+      'clientId': clientId,
       'clientName': clientName,
       'clientPhone': clientPhone,
-      'isDone': 0,
+      'isDone': isDone ? 1 : 0,
     };
   }
 

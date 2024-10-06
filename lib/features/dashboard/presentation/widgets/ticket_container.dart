@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quantify/core/constants/app_colors.dart';
+import 'package:quantify/features/dashboard/domain/entity/ticket.dart';
+import 'package:quantify/features/dashboard/presentation/blocs/tickets_bloc.dart';
+import 'package:quantify/features/dashboard/presentation/blocs/tickets_event.dart';
 
 import '../../../../core/constants/app_vectors.dart';
 
@@ -10,11 +14,13 @@ class TicketWidget extends StatelessWidget {
     required this.height,
     required this.isLight,
     required this.width,
+    required this.ticket,
   });
 
   final double height;
   final bool isLight;
   final double width;
+  final TicketEntity ticket;
 
   @override
   Widget build(BuildContext context) {
@@ -77,9 +83,9 @@ class TicketWidget extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Mohammed Amine',
-                    style: TextStyle(
+                  Text(
+                    ticket.clientName,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -94,18 +100,18 @@ class TicketWidget extends StatelessWidget {
                           : Colors.white.withOpacity(0.16),
                       borderRadius: BorderRadius.circular(5.5),
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           'Price: ',
                           style: TextStyle(
                             fontSize: 11.5,
                           ),
                         ),
                         Text(
-                          '300 DA',
-                          style: TextStyle(
+                          '${ticket.price} DA',
+                          style: const TextStyle(
                             fontSize: 11.5,
                             fontWeight: FontWeight.w600,
                           ),
@@ -122,10 +128,10 @@ class TicketWidget extends StatelessWidget {
                   shape: BoxShape.circle,
                   color: AppColors.maincolor,
                 ),
-                child: const Center(
+                child: Center(
                   child: Text(
-                    '09',
-                    style: TextStyle(
+                    ticket.number.toString(),
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -156,7 +162,16 @@ class TicketWidget extends StatelessWidget {
                 ),
               ),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  context.read<TicketsBloc>().add(
+                        UpdateTicketEvent(
+                          ticket: ticket.copyWith(isDone: true),
+                        ),
+                      );
+                  context
+                      .read<TicketsBloc>()
+                      .add(GetTicketsEvent(date: DateTime.now()));
+                },
                 splashColor: Colors.white.withOpacity(0.4),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8),

@@ -37,7 +37,8 @@ class DatabaseHelper {
         name TEXT,
         phone TEXT,
         visits INTEGER,
-        totalSpent REAL
+        totalSpent REAL,
+        dept REAL
       )
         ''');
       },

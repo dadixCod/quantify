@@ -20,8 +20,5 @@ class AppColors {
   static const deleteColor = Color(0xFFF02E2E);
   static const deleteDarkColor = Color(0xFFFCBABA);
   static const darkCallContainer = Color(0xFFC3C0FF);
-
-
-
-
+  static const lightCallContainer = Color.fromARGB(255, 237, 237, 237);
 }

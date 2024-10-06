@@ -8,13 +8,13 @@ class CustomTextField extends StatelessWidget {
       this.onChanged,
       this.width,
       required this.hint,
-      required this.icon,
+       this.icon,
       required this.controller,
       this.keyboardType});
   final Function(String)? onChanged;
   final double? width;
   final String hint;
-  final Widget icon;
+  final Widget? icon;
   final TextEditingController controller;
   final TextInputType? keyboardType;
 

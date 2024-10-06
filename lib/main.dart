@@ -4,6 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:quantify/core/configs/app_router.dart';
 import 'package:quantify/core/theme/app_theme.dart';
+import 'package:quantify/features/clients/presentation/blocs/clients_bloc.dart';
+import 'package:quantify/features/clients/presentation/blocs/clients_event.dart';
+import 'package:quantify/features/dashboard/presentation/blocs/tickets_bloc.dart';
+import 'package:quantify/features/dashboard/presentation/blocs/tickets_event.dart';
 import 'package:quantify/features/drawer/presentation/cubit/drawer_cubit.dart';
 import 'package:quantify/features/main/presentation/blocs/drawer_cubit.dart';
 import 'package:quantify/features/onboarding/presentation/blocs/on_boarding_cubit.dart';
@@ -55,6 +59,15 @@ class MainApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => DrawerCubit(),
+          lazy: false,
+        ),
+        BlocProvider(
+          create: (context) => ClientsBloc()..add(GetClientsEvent()),
+          lazy: false,
+        ),
+        BlocProvider(
+          create: (context) =>
+              TicketsBloc()..add(GetTicketsEvent(date: DateTime.now())),
           lazy: false,
         ),
       ],

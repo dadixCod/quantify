@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable_panel/flutter_slidable_panel.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quantify/core/utils/context.dart';
+import 'package:quantify/features/dashboard/domain/entity/ticket.dart';
+import 'package:quantify/features/dashboard/presentation/blocs/tickets_bloc.dart';
+import 'package:quantify/features/dashboard/presentation/blocs/tickets_event.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_vectors.dart';
@@ -12,11 +16,13 @@ class ClientTicketCard extends StatefulWidget {
     required this.width,
     required this.isLight,
     required this.index,
+    required this.ticket,
   });
 
   final double width;
   final bool isLight;
   final int index;
+  final TicketEntity ticket;
 
   @override
   State<ClientTicketCard> createState() => _ClientTicketCardState();
@@ -65,21 +71,35 @@ class _ClientTicketCardState extends State<ClientTicketCard> {
         ),
         Padding(
           padding: const EdgeInsets.only(left: 8.0),
-          child: Container(
-            height: 85,
-            width: 55,
-            decoration: BoxDecoration(
-              color: isLight
-                  ? AppColors.deleteColor.withOpacity(0.1)
-                  : AppColors.deleteDarkColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Center(
-              child: SvgPicture.asset(
-                AppVectors.delete,
-                colorFilter: ColorFilter.mode(
-                  isLight ? AppColors.deleteColor : AppColors.deleteDarkColor,
-                  BlendMode.srcIn,
+          child: GestureDetector(
+            onTap: () {
+              context.read<TicketsBloc>().add(
+                    DeleteTicketEvent(
+                      id: widget.ticket.id!,
+                    ),
+                  );
+              context.read<TicketsBloc>().add(
+                    GetTicketsEvent(
+                      date: DateTime.now(),
+                    ),
+                  );
+            },
+            child: Container(
+              height: 85,
+              width: 55,
+              decoration: BoxDecoration(
+                color: isLight
+                    ? AppColors.deleteColor.withOpacity(0.1)
+                    : AppColors.deleteDarkColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Center(
+                child: SvgPicture.asset(
+                  AppVectors.delete,
+                  colorFilter: ColorFilter.mode(
+                    isLight ? AppColors.deleteColor : AppColors.deleteDarkColor,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             ),
@@ -114,7 +134,7 @@ class _ClientTicketCardState extends State<ClientTicketCard> {
                 ),
                 child: Center(
                   child: Text(
-                    "${widget.index + 10}",
+                    "${widget.ticket.number}",
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -123,13 +143,13 @@ class _ClientTicketCardState extends State<ClientTicketCard> {
                   ),
                 ),
               ),
-              SizedBox(width: 14),
+              const SizedBox(width: 14),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Mohammed Amine',
-                    style: TextStyle(
+                  Text(
+                    widget.ticket.clientName,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -144,18 +164,18 @@ class _ClientTicketCardState extends State<ClientTicketCard> {
                           : Colors.white.withOpacity(0.16),
                       borderRadius: BorderRadius.circular(5.5),
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           'Price: ',
                           style: TextStyle(
                             fontSize: 11.5,
                           ),
                         ),
                         Text(
-                          '300 DA',
-                          style: TextStyle(
+                          '${widget.ticket.price} DA',
+                          style: const TextStyle(
                             fontSize: 11.5,
                             fontWeight: FontWeight.w600,
                           ),
@@ -165,7 +185,7 @@ class _ClientTicketCardState extends State<ClientTicketCard> {
                   )
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               IconButton(
                 onPressed: () {},
                 icon: SvgPicture.asset(

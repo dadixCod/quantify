@@ -1,5 +1,5 @@
 import 'package:quantify/core/utils/use_case.dart';
-import 'package:quantify/features/clients/domain/entity/update_client_data.dart';
+import 'package:quantify/features/clients/shared/update_client_data.dart';
 import 'package:quantify/features/clients/domain/repository/clients_repository.dart';
 import 'package:quantify/service_locator.dart';
 

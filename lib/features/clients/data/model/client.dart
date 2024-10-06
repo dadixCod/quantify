@@ -7,6 +7,7 @@ class ClientModel extends ClientEntity {
     required super.phone,
     super.visits,
     super.totalSpent,
+    super.dept,
   });
 
   factory ClientModel.fromJson(Map<String, dynamic> data) {
@@ -16,6 +17,7 @@ class ClientModel extends ClientEntity {
       phone: data['phone'],
       visits: data['visits'],
       totalSpent: data['totalSpent'],
+      dept: data['dept'],
     );
   }
 
@@ -25,6 +27,7 @@ class ClientModel extends ClientEntity {
       'phone': phone,
       'visits': visits,
       'totalSpent': totalSpent,
+      'dept':dept,
     };
   }
 
@@ -35,7 +38,7 @@ class ClientModel extends ClientEntity {
       phone: entity.phone,
       visits: entity.visits,
       totalSpent: entity.totalSpent,
+      dept: entity.dept,
     );
   }
-
 }

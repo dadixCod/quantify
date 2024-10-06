@@ -1,5 +1,5 @@
 import 'package:quantify/features/clients/data/model/client.dart';
-import 'package:quantify/features/clients/domain/entity/update_client_data.dart';
+import 'package:quantify/features/clients/shared/update_client_data.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ClientsDatasource {
@@ -66,6 +66,7 @@ class ClientsDatasource {
         {
           'visits': visits,
           'totalSpent': newMoneySpent,
+          'dept': selectedClient.dept,
         },
         where: 'id = ?',
         whereArgs: [data.clientId],

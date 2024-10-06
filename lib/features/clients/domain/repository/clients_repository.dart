@@ -1,5 +1,5 @@
 import 'package:quantify/features/clients/domain/entity/client.dart';
-import 'package:quantify/features/clients/domain/entity/update_client_data.dart';
+import 'package:quantify/features/clients/shared/update_client_data.dart';
 
 abstract class ClientsRepository {
 
