@@ -19,11 +19,10 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
         final pendingTickets =
             await sl<GetUndoneTicketsUseCase>().call(params: event.date);
 
-        log(pendingTickets.toString());
-        log(doneTickets.toString());
         emit(TicketsLoaded(
             doneTickets: doneTickets, pendingTickets: pendingTickets));
       } catch (e) {
+        log("Error $e");
         emit(TicketsError(message: e.toString()));
       }
     });
@@ -33,6 +32,7 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
         await sl<AddTicketUseCase>().call(params: event.ticket);
         emit(AddTicketDone());
       } catch (e) {
+        log("Error addding : ${e.toString()}");
         emit(TicketActionErreur(message: e.toString()));
       }
     });
@@ -51,6 +51,7 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
         await sl<UpdateTicketUseCase>().call(params: event.ticket);
         emit(UpdateTicketDone());
       } catch (e) {
+        log(e.toString());
         emit(TicketActionErreur(message: e.toString()));
       }
     });

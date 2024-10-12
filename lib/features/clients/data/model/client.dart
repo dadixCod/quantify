@@ -23,11 +23,12 @@ class ClientModel extends ClientEntity {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
       'phone': phone,
       'visits': visits,
       'totalSpent': totalSpent,
-      'dept':dept,
+      'dept': dept,
     };
   }
 

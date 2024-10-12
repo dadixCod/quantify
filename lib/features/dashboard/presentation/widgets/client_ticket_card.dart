@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable_panel/flutter_slidable_panel.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:quantify/core/utils/context.dart';
 import 'package:quantify/features/dashboard/domain/entity/ticket.dart';
 import 'package:quantify/features/dashboard/presentation/blocs/tickets_bloc.dart';
 import 'package:quantify/features/dashboard/presentation/blocs/tickets_event.dart';
+import 'package:easy_url_launcher/easy_url_launcher.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_vectors.dart';
@@ -49,21 +51,26 @@ class _ClientTicketCardState extends State<ClientTicketCard> {
       postActions: [
         Padding(
           padding: const EdgeInsets.only(left: 8.0),
-          child: Container(
-            height: 85,
-            width: 55,
-            decoration: BoxDecoration(
-              color: isLight
-                  ? AppColors.maincolor.withOpacity(0.1)
-                  : AppColors.darkCallContainer.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Center(
-              child: SvgPicture.asset(
-                AppVectors.call,
-                colorFilter: ColorFilter.mode(
-                  isLight ? AppColors.maincolor : AppColors.darkCallContainer,
-                  BlendMode.srcIn,
+          child: GestureDetector(
+            onTap: () async {
+              await EasyLauncher.call(number: widget.ticket.clientPhone);
+            },
+            child: Container(
+              height: 85,
+              width: 55,
+              decoration: BoxDecoration(
+                color: isLight
+                    ? AppColors.maincolor.withOpacity(0.1)
+                    : AppColors.darkCallContainer.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Center(
+                child: SvgPicture.asset(
+                  AppVectors.call,
+                  colorFilter: ColorFilter.mode(
+                    isLight ? AppColors.maincolor : AppColors.darkCallContainer,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             ),
@@ -72,17 +79,24 @@ class _ClientTicketCardState extends State<ClientTicketCard> {
         Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: GestureDetector(
-            onTap: () {
-              context.read<TicketsBloc>().add(
-                    DeleteTicketEvent(
-                      id: widget.ticket.id!,
-                    ),
-                  );
-              context.read<TicketsBloc>().add(
-                    GetTicketsEvent(
-                      date: DateTime.now(),
-                    ),
-                  );
+            onTap: () async {
+              final result = await confirmationDialog(
+                context,
+                title: 'Delete Ticket',
+                content: 'Are you sure you want to delete this ticket?',
+              );
+              if (result != null && result == true) {
+                context.read<TicketsBloc>().add(
+                      DeleteTicketEvent(
+                        id: widget.ticket.id!,
+                      ),
+                    );
+                context.read<TicketsBloc>().add(
+                      GetTicketsEvent(
+                        date: DateTime.now(),
+                      ),
+                    );
+              }
             },
             child: Container(
               height: 85,
@@ -196,6 +210,48 @@ class _ClientTicketCardState extends State<ClientTicketCard> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<bool?> confirmationDialog(BuildContext context,
+      {required String title, required String content}) {
+    return showGeneralDialog<bool>(
+      context: context,
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        var tween = Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero);
+        var transition = tween
+            .animate(CurvedAnimation(parent: animation, curve: Curves.easeIn));
+
+        return SlideTransition(
+          position: transition,
+          child: child,
+        );
+      },
+      pageBuilder: (context, animation, secondAnimation) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            TextButton(
+              onPressed: () {
+                context.navigator.pop(true);
+              },
+              child: const Text(
+                'Oui',
+                style: TextStyle(
+                  color: AppColors.deleteColor,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                context.navigator.pop(false);
+              },
+              child: const Text('Non'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

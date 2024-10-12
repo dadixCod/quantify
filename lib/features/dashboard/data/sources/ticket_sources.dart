@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:intl/intl.dart';
+import 'package:quantify/features/clients/data/model/client.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:quantify/features/dashboard/data/model/ticket.dart';
 
@@ -10,57 +9,73 @@ class TicketSources {
 
   Future<List<TicketModel>> getUndoneTickets(DateTime date) async {
     final today = DateFormat('yyyy-MM-dd').format(date);
-    final List<Map<String, dynamic>> maps =
-        await db.query('tickets', where: 'date = ? AND isDone = ?', whereArgs: [today, 0]);
+    final List<Map<String, dynamic>> maps = await db.query('tickets',
+        where: 'date = ? AND isDone = ?', whereArgs: [today, 0]);
 
-    log(maps.toString());
     return List.generate(maps.length, (i) {
       return TicketModel.fromJson(maps[i]);
     });
   }
 
-  Future<List<TicketModel>> getDoneTickets(DateTime date ) async {
+  Future<List<TicketModel>> getDoneTickets(DateTime date) async {
     final today = DateFormat('yyyy-MM-dd').format(date);
-    final List<Map<String, dynamic>> maps =
-        await db.query('tickets', where: 'date = ? AND isDone = ?', whereArgs: [today, 1]);
+    final List<Map<String, dynamic>> maps = await db.query('tickets',
+        where: 'date = ? AND isDone = ?', whereArgs: [today, 1]);
 
-    log(maps.toString());
     return List.generate(maps.length, (i) {
       return TicketModel.fromJson(maps[i]);
     });
   }
 
   Future<bool> addTicket(TicketModel ticket) async {
-    try {
-      final todaysTickets = await db.query(
-        'tickets',
-        where: 'date = ?',
-        whereArgs: [ticket.date],
-        orderBy: 'number DESC',
-        limit: 1,
-      );
+    return await db.transaction((txn) async {
+      try {
+        final todaysTickets = await txn.query(
+          'tickets',
+          where: 'date = ?',
+          whereArgs: [ticket.date],
+          orderBy: 'number DESC',
+          limit: 1,
+        );
 
-      final lastTicket = todaysTickets.isNotEmpty ? todaysTickets.first : null;
+        final lastTicket =
+            todaysTickets.isNotEmpty ? todaysTickets.first : null;
+        final number = lastTicket == null
+            ? 1
+            : int.parse(lastTicket['number'].toString()) + 1;
 
-      final number = lastTicket == null
-          ? 1
-          : int.parse(lastTicket['number'].toString()) + 1;
+        ticket.number = number;
 
-      ticket.number = number;
+        // Get selected client and increment visits
+        final selectedClientList = await txn.query(
+          'clients',
+          where: 'id = ?',
+          whereArgs: [ticket.clientId],
+          limit: 1,
+        );
+        final selectedClient = ClientModel.fromJson(selectedClientList.first);
+        selectedClient.visits = (selectedClient.visits ?? 0) + 1;
 
-      log(ticket.toString());
-      final response = await db.insert(
-        'tickets',
-        ticket.toJson(),
-      );
-      if (response == 1) {
+        // Insert ticket and update client within transaction
+        await txn.insert(
+          'tickets',
+          ticket.toJson(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+
+        await txn.update(
+          'clients',
+          selectedClient.toJson(),
+          where: 'id = ?',
+          whereArgs: [ticket.clientId],
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+
         return true;
-      } else {
-        throw Exception('Error adding ticket');
+      } catch (e) {
+        rethrow;
       }
-    } catch (e) {
-      rethrow;
-    }
+    });
   }
 
   Future<bool> updateTicket(TicketModel ticket) async {

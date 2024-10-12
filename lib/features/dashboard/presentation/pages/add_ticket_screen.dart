@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:quantify/core/configs/app_router.dart';
@@ -6,6 +7,7 @@ import 'package:quantify/core/constants/app_colors.dart';
 import 'package:quantify/core/utils/context.dart';
 import 'package:quantify/features/clients/domain/entity/client.dart';
 import 'package:quantify/features/clients/presentation/blocs/clients_bloc.dart';
+import 'package:quantify/features/clients/presentation/blocs/clients_event.dart';
 import 'package:quantify/features/clients/presentation/blocs/clients_state.dart';
 import 'package:quantify/features/dashboard/domain/entity/ticket.dart';
 import 'package:quantify/features/dashboard/presentation/blocs/tickets_bloc.dart';
@@ -334,7 +336,10 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
                       context
                           .read<TicketsBloc>()
                           .add(GetTicketsEvent(date: DateTime.now()));
-                      context.navigator.pop();
+
+                      SchedulerBinding.instance.addPostFrameCallback((_) {
+                        context.navigator.pop();
+                      });
                     }
                   },
                   child: BlocBuilder<TicketsBloc, TicketsState>(
@@ -346,7 +351,6 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
                         ),
                       );
                     }
-
                     return const Text(
                       'Add Ticket',
                       style: TextStyle(

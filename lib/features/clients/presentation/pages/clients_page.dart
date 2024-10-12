@@ -1,3 +1,4 @@
+import 'package:easy_url_launcher/easy_url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -33,6 +34,10 @@ class _ClientsPageState extends State<ClientsPage> {
     super.dispose();
   }
 
+  Future<void> refresh() async {
+    context.read<ClientsBloc>().add(GetClientsEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = context.deviceSize.height;
@@ -59,155 +64,160 @@ class _ClientsPageState extends State<ClientsPage> {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          //Top container
-          Container(
-            height: height * 0.25,
-            width: width,
-            padding: const EdgeInsets.only(top: 40),
-            decoration: const BoxDecoration(
-              color: AppColors.maincolor,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(40),
-                bottomRight: Radius.circular(40),
-              ),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  // mainAxisAlignment: MainAxisAlignment.center,
+      body: RefreshIndicator(
+        onRefresh: refresh,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              //Top container
+              Container(
+                height: height * 0.25,
+                width: width,
+                padding: const EdgeInsets.only(top: 40),
+                decoration: const BoxDecoration(
+                  color: AppColors.maincolor,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(40),
+                    bottomRight: Radius.circular(40),
+                  ),
+                ),
+                child: Column(
                   children: [
-                    SizedBox(
-                      width: width * 0.42,
+                    Row(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: width * 0.42,
+                        ),
+                        const Text(
+                          'Clients',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.bgColor,
+                          ),
+                        ),
+                        SizedBox(
+                          width: width * 0.26,
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: SvgPicture.asset(
+                            AppVectors.funnel,
+                            height: 12,
+                            width: 12,
+                            colorFilter: const ColorFilter.mode(
+                              AppColors.bgColor,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                    const Text(
-                      'Clients',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.bgColor,
-                      ),
-                    ),
-                    SizedBox(
-                      width: width * 0.26,
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: SvgPicture.asset(
-                        AppVectors.funnel,
-                        height: 12,
-                        width: 12,
-                        colorFilter: const ColorFilter.mode(
-                          AppColors.bgColor,
-                          BlendMode.srcIn,
+                    const SizedBox(height: 30),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Container(
+                        width: width,
+                        height: height * 0.06,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(999),
+                          color: isLight
+                              ? AppColors.bgColor.withOpacity(0.8)
+                              : AppColors.darkBgColor.withOpacity(0.8),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.search_rounded,
+                              color: isLight
+                                  ? AppColors.maincolor
+                                  : AppColors.bgColor.withAlpha(150),
+                            ),
+                            const SizedBox(width: 10),
+                            SizedBox(
+                              width: width * 0.7,
+                              child: TextField(
+                                controller: _searchController,
+                                decoration: const InputDecoration(
+                                  contentPadding: EdgeInsets.only(bottom: 8),
+                                  border: InputBorder.none,
+                                  hintText: 'Search for clients',
+                                  hintStyle: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     )
                   ],
                 ),
-                const SizedBox(height: 30),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Container(
-                    width: width,
-                    height: height * 0.06,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(999),
-                      color: isLight
-                          ? AppColors.bgColor.withOpacity(0.8)
-                          : AppColors.darkBgColor.withOpacity(0.8),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.search_rounded,
-                          color: isLight
-                              ? AppColors.maincolor
-                              : AppColors.bgColor.withAlpha(150),
-                        ),
-                        const SizedBox(width: 10),
-                        SizedBox(
-                          width: width * 0.7,
-                          child: TextField(
-                            controller: _searchController,
-                            decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.only(bottom: 8),
-                              border: InputBorder.none,
-                              hintText: 'Search for clients',
-                              hintStyle: TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-          //Clients
-          const SizedBox(height: 20),
-          Container(
-            height: height * 0.7,
-            width: width,
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: BlocBuilder<ClientsBloc, ClientsState>(
-                builder: (context, state) {
-              if (state is ClientsLoading) {
-                return Center(
-                  child: CircularProgressIndicator.adaptive(
-                    valueColor: AlwaysStoppedAnimation(AppColors.maincolor),
-                  ),
-                );
-              } else if (state is ClientsError) {
-                return Center(
-                  child: Text(state.message),
-                );
-              } else if (state is ClientsLoaded) {
-                if (state.clients.isEmpty) {
-                  return Center(
-                    child: SizedBox(
-                      height: height * 0.5,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Lottie.asset(
-                            AppVectors.noTickets,
-                            height: height * 0.3,
-                          ),
-                          const Text('NO CLIENTS YET'),
-                        ],
+              ),
+              //Clients
+              const SizedBox(height: 20),
+              Container(
+                height: height * 0.7,
+                width: width,
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: BlocBuilder<ClientsBloc, ClientsState>(
+                    builder: (context, state) {
+                  if (state is ClientsLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator.adaptive(
+                        valueColor: AlwaysStoppedAnimation(AppColors.maincolor),
                       ),
-                    ),
-                  );
-                } else {
-                  return ListView.separated(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    itemCount: state.clients.length,
-                    itemBuilder: (context, index) {
-                      final client = state.clients[index];
-                      return ClientCard(
-                        height: height,
-                        isLight: isLight,
-                        client: client,
+                    );
+                  } else if (state is ClientsError) {
+                    return Center(
+                      child: Text(state.message),
+                    );
+                  } else if (state is ClientsLoaded) {
+                    if (state.clients.isEmpty) {
+                      return Center(
+                        child: SizedBox(
+                          height: height * 0.5,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Lottie.asset(
+                                AppVectors.noTickets,
+                                height: height * 0.3,
+                              ),
+                              const Text('NO CLIENTS YET'),
+                            ],
+                          ),
+                        ),
                       );
-                    },
-                    separatorBuilder: (context, index) {
-                      return const SizedBox(height: 5);
-                    },
-                  );
-                }
-              }
-              return SizedBox();
-            }),
-          )
-        ],
+                    } else {
+                      return ListView.separated(
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        itemCount: state.clients.length,
+                        itemBuilder: (context, index) {
+                          final client = state.clients[index];
+                          return ClientCard(
+                            height: height,
+                            isLight: isLight,
+                            client: client,
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return const SizedBox(height: 5);
+                        },
+                      );
+                    }
+                  }
+                  return const SizedBox();
+                }),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -251,23 +261,28 @@ class ClientCard extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  Container(
-                    height: 40,
-                    width: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: isLight
-                          ? AppColors.maincolor.withOpacity(0.3)
-                          : AppColors.darkCallContainer.withOpacity(0.5),
-                    ),
-                    child: Center(
-                      child: SvgPicture.asset(
-                        AppVectors.call,
-                        colorFilter: ColorFilter.mode(
-                          isLight
-                              ? AppColors.maincolor
-                              : AppColors.darkCallContainer,
-                          BlendMode.srcIn,
+                  GestureDetector(
+                    onTap: () async {
+                      await EasyLauncher.call(number: client.phone);
+                    },
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isLight
+                            ? AppColors.maincolor.withOpacity(0.3)
+                            : AppColors.darkCallContainer.withOpacity(0.5),
+                      ),
+                      child: Center(
+                        child: SvgPicture.asset(
+                          AppVectors.call,
+                          colorFilter: ColorFilter.mode(
+                            isLight
+                                ? AppColors.maincolor
+                                : AppColors.darkCallContainer,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       ),
                     ),

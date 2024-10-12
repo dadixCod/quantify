@@ -31,6 +31,7 @@ class TicketModel extends TicketEntity {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'number': number,
       'date': date,
       'time': '${time.hour}:${time.minute}',

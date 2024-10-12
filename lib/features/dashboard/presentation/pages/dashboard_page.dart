@@ -307,7 +307,11 @@ class _DashboardPageState extends State<DashboardPage>
                             ],
                           );
                         }
-
+                        if (state is TicketsError) {
+                          return Center(
+                            child: Text(state.message),
+                          );
+                        }
                         return const SizedBox();
                       }),
                     ),
