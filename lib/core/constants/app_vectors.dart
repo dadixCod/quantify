@@ -23,4 +23,7 @@ class AppVectors {
   static const noTickets = 'assets/lottie/tickets.json';
   static const addTicket = 'assets/lottie/add.json';
   static const funnel = 'assets/vectors/funnel.svg';
+  static const notifications = 'assets/lottie/notifications.json';
+  static const notificationsDark = 'assets/lottie/notifications_dark.json';
+
 }

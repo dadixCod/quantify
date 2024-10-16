@@ -4,6 +4,7 @@ import 'package:quantify/features/clients/presentation/pages/add_client_page.dar
 import 'package:quantify/features/dashboard/domain/entity/ticket.dart';
 import 'package:quantify/features/dashboard/presentation/pages/add_edit_ticket_screen.dart';
 import 'package:quantify/features/main/presentation/pages/main_page.dart';
+import 'package:quantify/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:quantify/features/onboarding/presentation/onboarding_page.dart';
 import 'package:quantify/features/shop_data/presentation/pages/shop_data_page.dart';
 import 'package:quantify/shared/pages/initial_page.dart';
@@ -15,6 +16,7 @@ class AppRouter {
   static const onBoardingPage = '/on_boarding';
   static const shopDataPage = '/shop_data';
   static const addClientPage = '/add_client';
+  static const notificationsPage = '/notifications';
 
   Route onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -48,6 +50,10 @@ class AppRouter {
       case addClientPage:
         return CupertinoPageRoute(
           builder: (_) => const AddClientPage(),
+        );
+      case notificationsPage:
+        return CupertinoPageRoute(
+          builder: (_) => const NotificationsPage(),
         );
 
       default:

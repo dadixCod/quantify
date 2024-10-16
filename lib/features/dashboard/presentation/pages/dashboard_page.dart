@@ -147,7 +147,8 @@ class _DashboardPageState extends State<DashboardPage>
                         const Spacer(),
                         IconButton(
                           onPressed: () {
-                            //TODO Notifiaction
+                            context.navigator
+                                .pushNamed(AppRouter.notificationsPage);
                           },
                           icon: SvgPicture.asset(
                             AppVectors.bell,
