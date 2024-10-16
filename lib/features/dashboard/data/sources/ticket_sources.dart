@@ -7,6 +7,8 @@ class TicketSources {
   final Database db;
   TicketSources(this.db);
 
+  String ticketTable = 'tickets';
+
   Future<List<TicketModel>> getUndoneTickets(DateTime date) async {
     final today = DateFormat('yyyy-MM-dd').format(date);
     final List<Map<String, dynamic>> maps = await db.query('tickets',
@@ -19,7 +21,7 @@ class TicketSources {
 
   Future<List<TicketModel>> getDoneTickets(DateTime date) async {
     final today = DateFormat('yyyy-MM-dd').format(date);
-    final List<Map<String, dynamic>> maps = await db.query('tickets',
+    final List<Map<String, dynamic>> maps = await db.query(ticketTable,
         where: 'date = ? AND isDone = ?', whereArgs: [today, 1]);
 
     return List.generate(maps.length, (i) {
@@ -31,7 +33,7 @@ class TicketSources {
     return await db.transaction((txn) async {
       try {
         final todaysTickets = await txn.query(
-          'tickets',
+          ticketTable,
           where: 'date = ?',
           whereArgs: [ticket.date],
           orderBy: 'number DESC',
@@ -58,7 +60,7 @@ class TicketSources {
 
         // Insert ticket and update client within transaction
         await txn.insert(
-          'tickets',
+          ticketTable,
           ticket.toJson(),
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
@@ -78,28 +80,47 @@ class TicketSources {
     });
   }
 
-  Future<bool> updateTicket(TicketModel ticket) async {
-    try {
-      final response = await db.update(
-        'tickets',
-        ticket.toJson(),
-        where: 'id = ?',
-        whereArgs: [ticket.id],
-      );
-      if (response == 1) {
-        return true;
-      } else {
-        throw Exception('Error updating ticket');
+  Future<bool> markDoneTicket(TicketModel ticket) async {
+    return await db.transaction((txn) async {
+      try {
+        final response = await txn.update(
+          ticketTable,
+          ticket.toJson(),
+          where: 'id = ?',
+          whereArgs: [ticket.id],
+        );
+        if (response == 1) {
+          final selectedClientList = await txn.query(
+            'clients',
+            where: 'id = ?',
+            whereArgs: [ticket.clientId],
+            limit: 1,
+          );
+          final selectedClient = ClientModel.fromJson(selectedClientList.first);
+          selectedClient.totalSpent =
+              (selectedClient.totalSpent ?? 0) + ticket.price;
+
+          await txn.update(
+            'clients',
+            selectedClient.toJson(),
+            where: 'id = ?',
+            whereArgs: [selectedClient.id],
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
+          return true;
+        } else {
+          throw Exception('Error updating ticket');
+        }
+      } catch (e) {
+        rethrow;
       }
-    } catch (e) {
-      rethrow;
-    }
+    });
   }
 
   Future<bool> deleteTicket(int id) async {
     try {
       final response = await db.delete(
-        'tickets',
+        ticketTable,
         where: 'id = ?',
         whereArgs: [id],
       );
@@ -111,5 +132,109 @@ class TicketSources {
     } catch (e) {
       rethrow;
     }
+  }
+
+  Future<bool> markClientInDept(TicketModel ticket) async {
+    return await db.transaction(
+      (txn) async {
+        try {
+          final response = await txn.update(
+            ticketTable,
+            ticket.toJson(),
+            where: 'id = ?',
+            whereArgs: [ticket.id],
+          );
+          if (response == 1) {
+            final selectedClientList = await txn.query(
+              'clients',
+              where: 'id = ?',
+              whereArgs: [ticket.clientId],
+              limit: 1,
+            );
+            final selectedClient =
+                ClientModel.fromJson(selectedClientList.first);
+            selectedClient.totalSpent =
+                (selectedClient.totalSpent ?? 0) + (ticket.price - ticket.dept);
+            selectedClient.dept = (selectedClient.dept ?? 0) + ticket.dept;
+
+            await txn.update(
+              'clients',
+              selectedClient.toJson(),
+              where: 'id = ?',
+              whereArgs: [selectedClient.id],
+              conflictAlgorithm: ConflictAlgorithm.replace,
+            );
+            return true;
+          } else {
+            throw Exception();
+          }
+        } catch (e) {
+          rethrow;
+        }
+      },
+    );
+  }
+
+  Future<bool> markUnDoneTicket(TicketModel ticket) async {
+    return await db.transaction((txn) async {
+      try {
+        final selectedClientList = await txn.query(
+          'clients',
+          where: 'id = ?',
+          whereArgs: [ticket.clientId],
+          limit: 1,
+        );
+        final selectedClient = ClientModel.fromJson(selectedClientList.first);
+
+        selectedClient.dept = (selectedClient.dept ?? 0) - ticket.dept;
+        selectedClient.totalSpent =
+            (selectedClient.totalSpent ?? 0) - (ticket.price - ticket.dept);
+
+        await txn.update(
+          'clients',
+          selectedClient.toJson(),
+          where: 'id = ?',
+          whereArgs: [selectedClient.id],
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+
+        ticket.dept = 0;
+        final response = await txn.update(
+          ticketTable,
+          ticket.toJson(),
+          where: 'id = ?',
+          whereArgs: [ticket.id],
+        );
+
+        if (response == 1) {
+          return true;
+        } else {
+          throw Exception('Error, try again !');
+        }
+      } catch (e) {
+        rethrow;
+      }
+    });
+  }
+
+  Future<bool> updateTicket(TicketModel ticket) async {
+    return await db.transaction((txn) async {
+      try {
+        final result = await txn.update(
+          ticketTable,
+          ticket.toJson(),
+          where: 'id = ?',
+          whereArgs: [ticket.id],
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+        if (result == 1) {
+          return true;
+        } else {
+          throw Exception();
+        }
+      } catch (e) {
+        rethrow;
+      }
+    });
   }
 }

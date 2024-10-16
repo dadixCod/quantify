@@ -24,6 +24,18 @@ class UpdateTicketEvent extends TicketsEvent {
 
   UpdateTicketEvent({required this.ticket});
 }
+class MarkDoneTicketEvent extends TicketsEvent {
+  final TicketEntity ticket;
 
+  MarkDoneTicketEvent({required this.ticket});
+}
 
+class MarkClientDept extends TicketsEvent {
+  final TicketEntity ticket;
+  MarkClientDept({required this.ticket});
+}
 
+class MarkUndoneTicket extends TicketsEvent {
+  final TicketEntity ticket;
+  MarkUndoneTicket({required this.ticket});
+}

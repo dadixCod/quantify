@@ -95,4 +95,21 @@ class ClientsDatasource {
       rethrow;
     }
   }
+
+  Future<List<ClientModel>> searchClients(String text) async {
+    return await db.transaction((txn) async {
+      try {
+        final queryClients = await txn.query(
+          tableName,
+          where: "name LIKE ?",
+          whereArgs: ['%$text%'],
+        );
+        final fetchedClients =
+            queryClients.map((client) => ClientModel.fromJson(client)).toList();
+        return fetchedClients;
+      } catch (e) {
+        rethrow;
+      }
+    });
+  }
 }

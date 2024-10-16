@@ -55,7 +55,7 @@ class _DashboardPageState extends State<DashboardPage>
         height: 45,
         child: ElevatedButton(
           onPressed: () {
-            context.navigator.pushNamed(AppRouter.addTicketScreen);
+            context.navigator.pushNamed(AppRouter.addEditTicketScreen);
           },
           style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.maincolor,
@@ -298,6 +298,7 @@ class _DashboardPageState extends State<DashboardPage>
                                                   isLight: isLight,
                                                   index: index,
                                                   ticket: doneTicekts[index],
+                                                  inDoneView: true,
                                                 );
                                               },
                                             ),
@@ -355,7 +356,7 @@ class _DashboardPageState extends State<DashboardPage>
                             child: GestureDetector(
                               onTap: () {
                                 context.navigator
-                                    .pushNamed(AppRouter.addTicketScreen);
+                                    .pushNamed(AppRouter.addEditTicketScreen);
                               },
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,

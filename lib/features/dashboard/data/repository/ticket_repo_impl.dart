@@ -30,6 +30,24 @@ class TicketRepositoryImpl extends TicketRepository {
   }
 
   @override
+  Future<bool> markDoneTicket(TicketEntity ticket) async {
+    final ticketModel = TicketModel.fromEntity(ticket);
+    return await datasources.markDoneTicket(ticketModel);
+  }
+
+  @override
+  Future<bool> markeClientInDept(TicketEntity ticket) async {
+    final ticketModel = TicketModel.fromEntity(ticket);
+    return await datasources.markClientInDept(ticketModel);
+  }
+
+  @override
+  Future<bool> markeUndoneTicket(TicketEntity ticket) async {
+    final ticketModel = TicketModel.fromEntity(ticket);
+    return await datasources.markUnDoneTicket(ticketModel);
+  }
+
+  @override
   Future<bool> updateTicket(TicketEntity ticket) async {
     final ticketModel = TicketModel.fromEntity(ticket);
     return await datasources.updateTicket(ticketModel);

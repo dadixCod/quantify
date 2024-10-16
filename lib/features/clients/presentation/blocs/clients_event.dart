@@ -24,3 +24,8 @@ class ClientDoneEvent extends ClientsEvent {
   final UpdateClientData updateData;
   ClientDoneEvent({required this.updateData});
 }
+
+class SearchClientsEvent extends ClientsEvent {
+  final String text;
+  SearchClientsEvent({required this.text});
+}

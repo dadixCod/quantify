@@ -7,7 +7,6 @@ import 'package:quantify/core/constants/app_colors.dart';
 import 'package:quantify/core/utils/context.dart';
 import 'package:quantify/features/clients/domain/entity/client.dart';
 import 'package:quantify/features/clients/presentation/blocs/clients_bloc.dart';
-import 'package:quantify/features/clients/presentation/blocs/clients_event.dart';
 import 'package:quantify/features/clients/presentation/blocs/clients_state.dart';
 import 'package:quantify/features/dashboard/domain/entity/ticket.dart';
 import 'package:quantify/features/dashboard/presentation/blocs/tickets_bloc.dart';
@@ -16,24 +15,34 @@ import 'package:quantify/features/dashboard/presentation/blocs/tickets_state.dar
 import 'package:quantify/shared/widgets/custom_filled_text_field.dart';
 import 'package:quantify/shared/widgets/main_button.dart';
 
-class AddTicketScreen extends StatefulWidget {
-  const AddTicketScreen({super.key});
+class AddEditTicketScreen extends StatefulWidget {
+  final TicketEntity? selectedTicket;
+  const AddEditTicketScreen({super.key, this.selectedTicket});
 
   @override
-  State<AddTicketScreen> createState() => _AddTicketScreenState();
+  State<AddEditTicketScreen> createState() => _AddEditTicketScreenState();
 }
 
-class _AddTicketScreenState extends State<AddTicketScreen> {
+class _AddEditTicketScreenState extends State<AddEditTicketScreen> {
   late TextEditingController priceController;
 
   ClientEntity? selectedClient;
+  int? selectedClientId;
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
   String? errorMessage;
+  String? phoneText;
 
   @override
   void initState() {
     priceController = TextEditingController();
+    if (widget.selectedTicket != null) {
+      setState(() {
+        selectedClientId = widget.selectedTicket!.clientId;
+        phoneText = widget.selectedTicket!.clientPhone;
+        priceController.text = widget.selectedTicket!.price.toString();
+      });
+    }
     super.initState();
   }
 
@@ -50,9 +59,9 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
         elevation: 0,
         centerTitle: true,
         foregroundColor: isLight ? AppColors.mainText : Colors.white,
-        title: const Text(
-          'Add Ticket',
-          style: TextStyle(
+        title: Text(
+          widget.selectedTicket != null ? 'Edit Ticket' : 'Add Ticket',
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w600,
           ),
@@ -96,12 +105,12 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
                             : AppColors.darkContainer,
                       ),
                       child: DropdownButtonHideUnderline(
-                        child: DropdownButton<ClientEntity?>(
+                        child: DropdownButton<int?>(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           icon: const Icon(
                             Icons.keyboard_arrow_down_rounded,
                           ),
-                          value: selectedClient,
+                          value: selectedClientId,
                           items: [
                             const DropdownMenuItem(
                               value: null,
@@ -115,7 +124,7 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
                             ),
                             ...clients.map((client) {
                               return DropdownMenuItem(
-                                value: client,
+                                value: client.id,
                                 child: Text(client.name),
                               );
                             }),
@@ -123,7 +132,10 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
                           onChanged: (value) {
                             if (value != null) {
                               setState(() {
-                                selectedClient = value;
+                                selectedClientId = value;
+
+                                selectedClient = clients
+                                    .firstWhere((client) => client.id == value);
                               });
                             }
                           },
@@ -173,14 +185,12 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      selectedClient == null ? "Phone" : selectedClient!.phone,
-                      style: TextStyle(
-                        color: selectedClient == null
-                            ? Colors.grey
-                            : isLight
-                                ? AppColors.mainText
-                                : AppColors.bgColor,
-                      ),
+                      selectedClient == null
+                          ? phoneText != null
+                              ? phoneText!
+                              : "Phone"
+                          : selectedClient!.phone,
+                      style: const TextStyle(color: Colors.grey),
                     ),
                   ),
                 ),
@@ -312,7 +322,7 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
                 const Spacer(),
                 MainButton(
                   onTap: () {
-                    if (selectedClient == null ||
+                    if (selectedClientId == null ||
                         priceController.text.isEmpty ||
                         double.tryParse(priceController.text) == null) {
                       setState(() {
@@ -322,24 +332,51 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
                       setState(() {
                         errorMessage = null;
                       });
-                      final newTicket = TicketEntity(
-                        date: formattedDate,
-                        time: selectedTime,
-                        price: double.parse(priceController.text),
-                        clientId: selectedClient!.id!,
-                        clientName: selectedClient!.name,
-                        clientPhone: selectedClient!.phone,
-                      );
-                      context
-                          .read<TicketsBloc>()
-                          .add(AddTicketEvent(ticket: newTicket));
-                      context
-                          .read<TicketsBloc>()
-                          .add(GetTicketsEvent(date: DateTime.now()));
+                      if (widget.selectedTicket != null) {
+                        final updatedTicket = TicketEntity(
+                          id: widget.selectedTicket!.id,
+                          number: widget.selectedTicket!.number,
+                          date: formattedDate,
+                          time: selectedTime,
+                          price: double.parse(priceController.text),
+                          dept: 0,
+                          clientId: selectedClientId!,
+                          clientName: selectedClient?.name ??
+                              widget.selectedTicket!.clientName,
+                          clientPhone: selectedClient?.phone ?? phoneText!,
+                        );
 
-                      SchedulerBinding.instance.addPostFrameCallback((_) {
-                        context.navigator.pop();
-                      });
+                        context
+                            .read<TicketsBloc>()
+                            .add(UpdateTicketEvent(ticket: updatedTicket));
+                        context
+                            .read<TicketsBloc>()
+                            .add(GetTicketsEvent(date: DateTime.now()));
+
+                        SchedulerBinding.instance.addPostFrameCallback((_) {
+                          context.navigator.pop();
+                        });
+                      } else {
+                        final newTicket = TicketEntity(
+                          date: formattedDate,
+                          time: selectedTime,
+                          price: double.parse(priceController.text),
+                          dept: 0,
+                          clientId: selectedClient!.id!,
+                          clientName: selectedClient!.name,
+                          clientPhone: selectedClient!.phone,
+                        );
+                        context
+                            .read<TicketsBloc>()
+                            .add(AddTicketEvent(ticket: newTicket));
+                        context
+                            .read<TicketsBloc>()
+                            .add(GetTicketsEvent(date: DateTime.now()));
+
+                        SchedulerBinding.instance.addPostFrameCallback((_) {
+                          context.navigator.pop();
+                        });
+                      }
                     }
                   },
                   child: BlocBuilder<TicketsBloc, TicketsState>(
@@ -351,9 +388,11 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
                         ),
                       );
                     }
-                    return const Text(
-                      'Add Ticket',
-                      style: TextStyle(
+                    return Text(
+                      widget.selectedTicket == null
+                          ? 'Add Ticket'
+                          : 'Edit Ticket',
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,

@@ -8,6 +8,7 @@ class TicketModel extends TicketEntity {
     required super.date,
     required super.time,
     required super.price,
+    required super.dept,
     required super.clientId,
     required super.clientName,
     required super.clientPhone,
@@ -22,6 +23,7 @@ class TicketModel extends TicketEntity {
           hour: int.parse(data['time'].split(':')[0]),
           minute: int.parse(data['time'].split(':')[1])),
       price: data['price'],
+      dept: data['dept'],
       clientId: data['clientId'],
       clientName: data['clientName'],
       clientPhone: data['clientPhone'],
@@ -36,6 +38,7 @@ class TicketModel extends TicketEntity {
       'date': date,
       'time': '${time.hour}:${time.minute}',
       'price': price,
+      'dept':dept,
       'clientId': clientId,
       'clientName': clientName,
       'clientPhone': clientPhone,
@@ -50,6 +53,7 @@ class TicketModel extends TicketEntity {
       date: entity.date,
       time: entity.time,
       price: entity.price,
+      dept: entity.dept,
       clientId: entity.clientId,
       clientName: entity.clientName,
       clientPhone: entity.clientPhone,
@@ -59,6 +63,6 @@ class TicketModel extends TicketEntity {
 
   @override
   String toString() {
-    return 'TicketModel(id: $id, number: $number, date: $date, time: $time, price: $price,clientId: $clientId, clientName: $clientName, clientPhone: $clientPhone, isDone: $isDone)';
+    return 'TicketModel(id: $id, number: $number, date: $date, time: $time, price: $price, dept: $dept ,clientId: $clientId, clientName: $clientName, clientPhone: $clientPhone, isDone: $isDone)';
   }
 }

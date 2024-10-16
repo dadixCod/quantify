@@ -3,6 +3,7 @@ import 'package:quantify/features/clients/domain/usecases/add_client.dart';
 import 'package:quantify/features/clients/domain/usecases/client_done.dart';
 import 'package:quantify/features/clients/domain/usecases/delete_client.dart';
 import 'package:quantify/features/clients/domain/usecases/get_clients.dart';
+import 'package:quantify/features/clients/domain/usecases/search_clients.dart';
 import 'package:quantify/features/clients/domain/usecases/update_client.dart';
 import 'package:quantify/features/clients/presentation/blocs/clients_event.dart';
 import 'package:quantify/features/clients/presentation/blocs/clients_state.dart';
@@ -15,6 +16,7 @@ class ClientsBloc extends Bloc<ClientsEvent, ClientsState> {
       try {
         final clients = await sl<GetClientsUseCase>().call();
         emit(ClientsLoaded(clients: clients));
+        
       } catch (e) {
         emit(ClientsError(message: e.toString()));
       }
@@ -29,7 +31,7 @@ class ClientsBloc extends Bloc<ClientsEvent, ClientsState> {
       }
     });
     on<UpdateClientEvent>((event, emit) async {
-            emit(ClientActionLoading());
+      emit(ClientActionLoading());
       try {
         await sl<UpdateClientUseCase>().call(params: event.client);
         emit(UpdateClientDone());
@@ -39,7 +41,7 @@ class ClientsBloc extends Bloc<ClientsEvent, ClientsState> {
     });
 
     on<DeleteClientEvent>((event, emit) async {
-            emit(ClientActionLoading());
+      emit(ClientActionLoading());
       try {
         await sl<DeleteClientUseCase>().call(params: event.id);
         emit(DeleteClientDone());
@@ -52,6 +54,17 @@ class ClientsBloc extends Bloc<ClientsEvent, ClientsState> {
       try {
         await sl<ClientDoneUseCase>().call(params: event.updateData);
         emit(ClientDone());
+      } catch (e) {
+        emit(ClientActionError(message: e.toString()));
+      }
+    });
+
+    on<SearchClientsEvent>((event, emit) async {
+      emit(ClientActionLoading());
+      try {
+        final searchedClients =
+            await sl<SearchClientsUseCase>().call(params: event.text);
+        emit(ClientsLoaded(clients: searchedClients));
       } catch (e) {
         emit(ClientActionError(message: e.toString()));
       }

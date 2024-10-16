@@ -5,6 +5,7 @@ import 'package:quantify/features/clients/domain/repository/clients_repository.d
 import 'package:quantify/features/clients/domain/usecases/add_client.dart';
 import 'package:quantify/features/clients/domain/usecases/delete_client.dart';
 import 'package:quantify/features/clients/domain/usecases/get_clients.dart';
+import 'package:quantify/features/clients/domain/usecases/search_clients.dart';
 import 'package:quantify/features/clients/domain/usecases/update_client.dart';
 import 'package:quantify/features/dashboard/data/repository/ticket_repo_impl.dart';
 import 'package:quantify/features/dashboard/data/sources/ticket_sources.dart';
@@ -13,6 +14,9 @@ import 'package:quantify/features/dashboard/domain/usecase/add_ticket.dart';
 import 'package:quantify/features/dashboard/domain/usecase/delete_ticket.dart';
 import 'package:quantify/features/dashboard/domain/usecase/get_done_tickets.dart';
 import 'package:quantify/features/dashboard/domain/usecase/get_undone_tickets.dart';
+import 'package:quantify/features/dashboard/domain/usecase/mark_dept.dart';
+import 'package:quantify/features/dashboard/domain/usecase/mark_undone.dart';
+import 'package:quantify/features/dashboard/domain/usecase/mark_done_ticket.dart';
 import 'package:quantify/features/dashboard/domain/usecase/update_ticket.dart';
 import 'package:quantify/features/onboarding/data/repository/on_boarding_repo_impl.dart';
 import 'package:quantify/features/onboarding/domain/repository/on_boarding_repo.dart';
@@ -57,8 +61,11 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<GetDoneTicketsUseCase>(GetDoneTicketsUseCase());
   sl.registerSingleton<GetUndoneTicketsUseCase>(GetUndoneTicketsUseCase());
   sl.registerSingleton<AddTicketUseCase>(AddTicketUseCase());
-  sl.registerSingleton<UpdateTicketUseCase>(UpdateTicketUseCase());
+  sl.registerSingleton<MarkDoneTicketUseCase>(MarkDoneTicketUseCase());
   sl.registerSingleton<DeleteTicketUseCase>(DeleteTicketUseCase());
+  sl.registerSingleton<MarkClientInDeptUseCase>(MarkClientInDeptUseCase());
+  sl.registerSingleton<MarkUndoneTicketUseCase>(MarkUndoneTicketUseCase());
+  sl.registerSingleton<UpdateTicketUseCase>(UpdateTicketUseCase());
 
   //Clients
   sl.registerSingleton<ClientsDatasource>(ClientsDatasource(sl()));
@@ -67,10 +74,5 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<AddClientUseCase>(AddClientUseCase());
   sl.registerSingleton<UpdateClientUseCase>(UpdateClientUseCase());
   sl.registerSingleton<DeleteClientUseCase>(DeleteClientUseCase());
-
-
-
-
-
-  
+  sl.registerSingleton<SearchClientsUseCase>(SearchClientsUseCase());
 }

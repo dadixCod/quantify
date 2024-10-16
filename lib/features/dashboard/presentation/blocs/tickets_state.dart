@@ -22,11 +22,9 @@ class TicketsError extends TicketsState {
 
 class TicketActionLoading extends TicketsState {}
 
-class AddTicketDone extends TicketsState {}
+class TicketActionDone extends TicketsState {}
 
-class DeleteTicketDone extends TicketsState {}
 
-class UpdateTicketDone extends TicketsState {}
 
 class TicketActionErreur extends TicketsState {
   final String message;

@@ -7,10 +7,11 @@ class TicketEntity {
   final String date;
   final TimeOfDay time;
   final double price;
+  double dept;
   final int clientId;
   final String clientName;
   final String clientPhone;
-   bool isDone;
+  bool isDone;
 
   TicketEntity({
     this.id,
@@ -18,13 +19,12 @@ class TicketEntity {
     required this.date,
     required this.time,
     required this.price,
+    required this.dept,
     required this.clientId,
     required this.clientName,
     required this.clientPhone,
     this.isDone = false,
   });
-
-  
 
   TicketEntity copyWith({
     int? id,
@@ -32,6 +32,7 @@ class TicketEntity {
     String? date,
     TimeOfDay? time,
     double? price,
+    double? dept,
     int? clientId,
     String? clientName,
     String? clientPhone,
@@ -43,10 +44,16 @@ class TicketEntity {
       date: date ?? this.date,
       time: time ?? this.time,
       price: price ?? this.price,
+      dept: dept ?? this.dept,
       clientId: clientId ?? this.clientId,
       clientName: clientName ?? this.clientName,
       clientPhone: clientPhone ?? this.clientPhone,
       isDone: isDone ?? this.isDone,
     );
+  }
+
+  @override
+  String toString() {
+    return 'TicketEntity(id: $id, number: $number, date: $date, time: $time, price: $price, dept: $dept, clientId: $clientId, clientName: $clientName, clientPhone: $clientPhone, isDone: $isDone)';
   }
 }

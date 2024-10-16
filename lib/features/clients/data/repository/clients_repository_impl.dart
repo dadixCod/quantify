@@ -33,4 +33,9 @@ class ClientsRepositoryImpl extends ClientsRepository {
     final clientModel = ClientModel.fromEntity(client);
     return await datasource.updateClient(clientModel);
   }
+
+  @override
+  Future<List<ClientEntity>> searchClients(String text) async {
+    return await datasource.searchClients(text);
+  }
 }

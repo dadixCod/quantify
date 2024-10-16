@@ -25,6 +25,7 @@ class DatabaseHelper {
         date TEXT,
         time TEXT,
         price REAL,
+        dept REAL,
         clientId INTEGER,
         clientName TEXT,
         clientPhone TEXT,
