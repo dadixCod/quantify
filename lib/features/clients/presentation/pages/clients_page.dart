@@ -48,7 +48,7 @@ class _ClientsPageState extends State<ClientsPage> {
         height: 45,
         child: ElevatedButton(
           onPressed: () {
-            context.navigator.pushNamed(AppRouter.addClientPage);
+            context.navigator.pushNamed(AppRouter.addEditClientPage);
           },
           style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.maincolor,

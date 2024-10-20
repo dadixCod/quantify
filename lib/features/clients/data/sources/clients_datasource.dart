@@ -1,5 +1,6 @@
 import 'package:quantify/features/clients/data/model/client.dart';
 import 'package:quantify/features/clients/shared/update_client_data.dart';
+import 'package:quantify/features/dashboard/data/model/ticket.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ClientsDatasource {
@@ -30,21 +31,56 @@ class ClientsDatasource {
   }
 
   Future<bool> updateClient(ClientModel client) async {
-    try {
-      final result = await db.update(
-        tableName,
-        client.toJson(),
-        where: 'id = ?',
-        whereArgs: [client.id],
-      );
-      if (result == 1) {
-        return true;
-      } else {
-        throw Exception('Error updating client');
+    return await db.transaction((txn) async {
+      try {
+        final result = await txn.update(
+          tableName,
+          client.toJson(),
+          where: 'id = ?',
+          whereArgs: [client.id],
+        );
+        if (result == 1) {
+          //Update All Old Tickets with the same clientId
+          //1. Fetching tickets
+          final ticketsListMap = await txn.query(
+            'tickets',
+            where: 'clientId = ?',
+            whereArgs: [client.id],
+          );
+          //2. Turning them into TicketModels
+          final ticketsList = ticketsListMap
+              .map((ticket) => TicketModel.fromJson(ticket))
+              .toList();
+          //3. Looping threw tickets with same clientId and Updating client name and phone
+          for (var ticket in ticketsList) {
+            final updatedTicket = TicketModel(
+              id: ticket.id,
+              date: ticket.date,
+              time: ticket.time,
+              price: ticket.price,
+              dept: ticket.dept,
+              clientId: ticket.clientId,
+              clientName: client.name,
+              clientPhone: client.phone,
+              number: ticket.number,
+              isDone: ticket.isDone,
+            );
+            await txn.update(
+              'tickets',
+              updatedTicket.toJson(),
+              where: 'id = ?',
+              whereArgs: [ticket.id],
+            );
+          }
+
+          return true;
+        } else {
+          throw Exception('Error updating client');
+        }
+      } catch (e) {
+        rethrow;
       }
-    } catch (e) {
-      rethrow;
-    }
+    });
   }
 
   Future<bool> clientDone(UpdateClientData data) async {
@@ -83,17 +119,24 @@ class ClientsDatasource {
   }
 
   Future<bool> deleteClient(int id) async {
-    try {
-      final result =
-          await db.delete(tableName, where: 'id = ?', whereArgs: [id]);
-      if (result == 1) {
-        return true;
-      } else {
-        throw Exception('Error deleting client');
+    return await db.transaction((txn) async {
+      try {
+        final result =
+            await txn.delete(tableName, where: 'id = ?', whereArgs: [id]);
+        if (result == 1) {
+          await txn.delete(
+            'tickets',
+            where: 'clientId = ?',
+            whereArgs: [id],
+          );
+          return true;
+        } else {
+          throw Exception('Error deleting client');
+        }
+      } catch (e) {
+        rethrow;
       }
-    } catch (e) {
-      rethrow;
-    }
+    });
   }
 
   Future<List<ClientModel>> searchClients(String text) async {

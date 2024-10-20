@@ -7,6 +7,7 @@ import 'package:quantify/core/constants/app_colors.dart';
 import 'package:quantify/core/utils/context.dart';
 import 'package:quantify/features/clients/domain/entity/client.dart';
 import 'package:quantify/features/clients/presentation/blocs/clients_bloc.dart';
+import 'package:quantify/features/clients/presentation/blocs/clients_event.dart';
 import 'package:quantify/features/clients/presentation/blocs/clients_state.dart';
 import 'package:quantify/features/dashboard/domain/entity/ticket.dart';
 import 'package:quantify/features/dashboard/presentation/blocs/tickets_bloc.dart';
@@ -145,7 +146,7 @@ class _AddEditTicketScreenState extends State<AddEditTicketScreen> {
                     const SizedBox(width: 10),
                     GestureDetector(
                       onTap: () {
-                        context.navigator.pushNamed(AppRouter.addClientPage);
+                        context.navigator.pushNamed(AppRouter.addEditClientPage);
                       },
                       child: Container(
                         width: width * 0.15,
@@ -375,6 +376,9 @@ class _AddEditTicketScreenState extends State<AddEditTicketScreen> {
 
                         SchedulerBinding.instance.addPostFrameCallback((_) {
                           context.navigator.pop();
+                          SchedulerBinding.instance.addPostFrameCallback((_) {
+                            context.read<ClientsBloc>().add(GetClientsEvent());
+                          });
                         });
                       }
                     }

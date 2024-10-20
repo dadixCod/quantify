@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:quantify/features/clients/presentation/pages/add_client_page.dart';
+import 'package:quantify/features/clients/domain/entity/client.dart';
+import 'package:quantify/features/clients/presentation/pages/add_edit_client_page.dart';
 import 'package:quantify/features/dashboard/domain/entity/ticket.dart';
 import 'package:quantify/features/dashboard/presentation/pages/add_edit_ticket_screen.dart';
 import 'package:quantify/features/main/presentation/pages/main_page.dart';
@@ -15,7 +16,7 @@ class AppRouter {
   static const mainPage = '/main';
   static const onBoardingPage = '/on_boarding';
   static const shopDataPage = '/shop_data';
-  static const addClientPage = '/add_client';
+  static const addEditClientPage = '/add_edit_client';
   static const notificationsPage = '/notifications';
 
   Route onGenerateRoute(RouteSettings settings) {
@@ -47,10 +48,16 @@ class AppRouter {
           );
         }
 
-      case addClientPage:
-        return CupertinoPageRoute(
-          builder: (_) => const AddClientPage(),
-        );
+      case addEditClientPage:
+        {
+          final selectedClient = settings.arguments as ClientEntity?;
+
+          return CupertinoPageRoute(
+            builder: (_) => AddEditClientPage(
+              selectedClient: selectedClient,
+            ),
+          );
+        }
       case notificationsPage:
         return CupertinoPageRoute(
           builder: (_) => const NotificationsPage(),

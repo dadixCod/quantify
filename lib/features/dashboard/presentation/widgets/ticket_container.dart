@@ -75,11 +75,17 @@ class TicketWidget extends StatelessWidget {
                   const SizedBox(width: 20),
                   GestureDetector(
                     onTap: () {
-                      context.navigator.pushNamed(AppRouter.addEditTicketScreen,
-                          arguments: ticket);
+                      context.navigator.pushNamed(
+                        AppRouter.addEditTicketScreen,
+                        arguments: ticket,
+                      );
                     },
                     child: SvgPicture.asset(
                       AppVectors.pencil,
+                      colorFilter: ColorFilter.mode(
+                        isLight ? AppColors.darkBgColor : AppColors.bgColor,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   )
                 ],
