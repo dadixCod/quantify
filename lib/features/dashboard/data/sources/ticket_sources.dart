@@ -1,5 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:quantify/features/clients/data/model/client.dart';
+import 'package:quantify/service_locator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:quantify/features/dashboard/data/model/ticket.dart';
 
@@ -11,8 +13,9 @@ class TicketSources {
 
   Future<List<TicketModel>> getUndoneTickets(DateTime date) async {
     final today = DateFormat('yyyy-MM-dd').format(date);
+    final shopId = sl<SharedPreferences>().getInt('shopId');
     final List<Map<String, dynamic>> maps = await db.query('tickets',
-        where: 'date = ? AND isDone = ?', whereArgs: [today, 0]);
+        where: 'date = ? AND isDone = ? AND shopId = ?', whereArgs: [today, 0,shopId]);
 
     return List.generate(maps.length, (i) {
       return TicketModel.fromJson(maps[i]);
@@ -21,8 +24,9 @@ class TicketSources {
 
   Future<List<TicketModel>> getDoneTickets(DateTime date) async {
     final today = DateFormat('yyyy-MM-dd').format(date);
+        final shopId = sl<SharedPreferences>().getInt('shopId');
     final List<Map<String, dynamic>> maps = await db.query(ticketTable,
-        where: 'date = ? AND isDone = ?', whereArgs: [today, 1]);
+        where: 'date = ? AND isDone = ? AND shopId = ?', whereArgs: [today, 1,shopId]);
 
     return List.generate(maps.length, (i) {
       return TicketModel.fromJson(maps[i]);

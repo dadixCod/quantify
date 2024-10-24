@@ -12,7 +12,7 @@ class TicketModel extends TicketEntity {
     required super.clientId,
     required super.clientName,
     required super.clientPhone,
-    super.isDone,
+    super.isDone, required super.shopId,
   });
   factory TicketModel.fromJson(Map<String, dynamic> data) {
     return TicketModel(
@@ -27,6 +27,7 @@ class TicketModel extends TicketEntity {
       clientId: data['clientId'],
       clientName: data['clientName'],
       clientPhone: data['clientPhone'],
+      shopId: data['shopId'],
       isDone: data['isDone'] == 1 ? true : false,
     );
   }
@@ -42,6 +43,7 @@ class TicketModel extends TicketEntity {
       'clientId': clientId,
       'clientName': clientName,
       'clientPhone': clientPhone,
+      'shopId':shopId,
       'isDone': isDone ? 1 : 0,
     };
   }
@@ -57,6 +59,7 @@ class TicketModel extends TicketEntity {
       clientId: entity.clientId,
       clientName: entity.clientName,
       clientPhone: entity.clientPhone,
+      shopId: entity.shopId,
       isDone: entity.isDone,
     );
   }

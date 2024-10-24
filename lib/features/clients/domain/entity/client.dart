@@ -5,6 +5,7 @@ class ClientEntity {
   int? visits;
   double? totalSpent;
   double? dept;
+  final int shopId;
 
   ClientEntity({
     this.id,
@@ -13,5 +14,6 @@ class ClientEntity {
     this.visits,
     this.totalSpent,
     this.dept,
+    required this.shopId,
   });
 }

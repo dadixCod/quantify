@@ -4,7 +4,7 @@ abstract class ShopState {}
 
 class ShopInitial extends ShopState {}
 
-class ShopNull extends ShopState{}
+class ShopNull extends ShopState {}
 
 class ShopLoading extends ShopState {}
 
@@ -13,8 +13,11 @@ class ShopLoaded extends ShopState {
   ShopLoaded({required this.shop});
 }
 
-class ShopAdded extends ShopState{}
-class ShopUpdated extends ShopState{}
+class ShopAdded extends ShopState {}
+
+class ShopUpdated extends ShopState {}
+
+class ShopLoggedOut extends ShopState {}
 
 class ShopError extends ShopState {
   final String message;

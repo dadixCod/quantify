@@ -50,7 +50,7 @@ class MainApp extends StatelessWidget {
           lazy: false,
         ),
         BlocProvider(
-          create: (context) => ShopBloc()..add(GetShopData()),
+          create: (context) => ShopBloc()..add(GetShopDataById()),
           lazy: false,
         ),
         BlocProvider(

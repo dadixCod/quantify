@@ -26,7 +26,9 @@ import 'package:quantify/features/shop_data/data/repository/shop_repository_impl
 import 'package:quantify/features/shop_data/data/sources/shop_sources.dart';
 import 'package:quantify/features/shop_data/domain/repository/shop_repository.dart';
 import 'package:quantify/features/shop_data/domain/usecase/add_shop_usecase.dart';
+import 'package:quantify/features/shop_data/domain/usecase/get_shop_byemail_usecase.dart';
 import 'package:quantify/features/shop_data/domain/usecase/get_shop_data_usecase.dart';
+import 'package:quantify/features/shop_data/domain/usecase/login_shop_usecase.dart';
 import 'package:quantify/features/shop_data/domain/usecase/update_shop_usecase.dart';
 import 'package:quantify/shared/helpers/database_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,10 +53,12 @@ Future<void> initializeDependencies() async {
   //Shop data
   sl.registerSingleton<ShopSources>(ShopSources(sl()));
   sl.registerSingleton<ShopRepository>(ShopRepositoryImpl(sl()));
-  sl.registerSingleton<GetShopDataUsecase>(GetShopDataUsecase(sl()));
+  sl.registerSingleton<GetShopDataByIdUsecase>(GetShopDataByIdUsecase(sl()));
+  sl.registerSingleton<GetShopDataByEmailUseCase>(
+      GetShopDataByEmailUseCase(sl()));
   sl.registerSingleton<AddShopUsecase>(AddShopUsecase(sl()));
   sl.registerSingleton<UpdateShopUsecase>(UpdateShopUsecase(sl()));
-
+  sl.registerSingleton<LoginShopUsecase>(LoginShopUsecase(sl()));
   //Dashboard
   sl.registerSingleton<TicketSources>(TicketSources(sl()));
   sl.registerSingleton<TicketRepository>(TicketRepositoryImpl(sl()));

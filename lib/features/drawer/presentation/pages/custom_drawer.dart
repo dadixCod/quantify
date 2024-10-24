@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quantify/core/configs/app_router.dart';
 
 import 'package:quantify/core/constants/app_colors.dart';
 import 'package:quantify/core/constants/app_vectors.dart';
@@ -8,6 +9,10 @@ import 'package:quantify/core/utils/rive_utils.dart';
 import 'package:quantify/features/drawer/data/drawer_item.dart';
 import 'package:quantify/features/drawer/presentation/cubit/drawer_cubit.dart';
 import 'package:quantify/features/drawer/presentation/widgets/drawer_container.dart';
+import 'package:quantify/features/main/presentation/blocs/drawer_cubit.dart';
+import 'package:quantify/features/shop_data/presentation/blocs/shop_bloc.dart';
+import 'package:quantify/features/shop_data/presentation/blocs/shop_event.dart';
+import 'package:quantify/shared/widgets/dialogs.dart';
 import 'package:rive/rive.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -81,10 +86,25 @@ class _CustomDrawerState extends State<CustomDrawer> {
               ),
             ),
             const Spacer(),
-            const DrawerContainer(
-              title: 'Logout',
-              icon: AppVectors.logout,
-              isSelected: false,
+            GestureDetector(
+              onTap: () async {
+                final response = await confirmationDialog(
+                  context,
+                  title: 'Logout',
+                  content: 'Are you sure you want to logout?',
+                );
+                if (response == true) {
+                  context.read<DrawerCubit>().changeDrawerState();
+                  context.read<ShopBloc>().add(LogoutFromShop());
+                  context.navigator
+                      .pushReplacementNamed(AppRouter.shopDataPage);
+                }
+              },
+              child: const DrawerContainer(
+                title: 'Logout',
+                icon: AppVectors.logout,
+                isSelected: false,
+              ),
             ),
           ],
         ),

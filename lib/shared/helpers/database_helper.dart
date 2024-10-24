@@ -13,9 +13,11 @@ class DatabaseHelper {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
         address TEXT,
-        phone TEXT,
+        phone TEXT UNIQUE,
         start TEXT,
-        end TEXT
+        end TEXT,
+        email TEXT UNIQUE,
+        password TEXT
       )
       ''');
         db.execute('''
@@ -29,7 +31,9 @@ class DatabaseHelper {
         clientId INTEGER,
         clientName TEXT,
         clientPhone TEXT,
-        isDone INTEGER
+        isDone INTEGER,
+        shopId INTEGER,
+        FOREIGN KEY (shopId) REFERENCES shops(id)
       )
         ''');
         db.execute('''
@@ -39,7 +43,9 @@ class DatabaseHelper {
         phone TEXT,
         visits INTEGER,
         totalSpent REAL,
-        dept REAL
+        dept REAL,
+        shopId INTEGER,
+        FOREIGN KEY (shopId) REFERENCES shops(id)
       )
         ''');
       },

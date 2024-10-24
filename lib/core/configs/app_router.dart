@@ -7,6 +7,7 @@ import 'package:quantify/features/dashboard/presentation/pages/add_edit_ticket_s
 import 'package:quantify/features/main/presentation/pages/main_page.dart';
 import 'package:quantify/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:quantify/features/onboarding/presentation/onboarding_page.dart';
+import 'package:quantify/features/shop_data/presentation/pages/login_page.dart';
 import 'package:quantify/features/shop_data/presentation/pages/shop_data_page.dart';
 import 'package:quantify/shared/pages/initial_page.dart';
 
@@ -16,6 +17,7 @@ class AppRouter {
   static const mainPage = '/main';
   static const onBoardingPage = '/on_boarding';
   static const shopDataPage = '/shop_data';
+  static const loginPage = '/login';
   static const addEditClientPage = '/add_edit_client';
   static const notificationsPage = '/notifications';
 
@@ -29,11 +31,15 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => const OnboardingPage(),
         );
+
       case shopDataPage:
         return MaterialPageRoute(
           builder: (_) => const ShopDataPage(),
         );
-
+      case loginPage:
+        return MaterialPageRoute(
+          builder: (_) => const LoginPage(),
+        );
       case mainPage:
         return CupertinoPageRoute(
           builder: (_) => const MainPage(),

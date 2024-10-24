@@ -3,20 +3,23 @@ import 'package:quantify/core/constants/app_colors.dart';
 import 'package:quantify/core/utils/context.dart';
 
 class CustomTextField extends StatelessWidget {
-  const CustomTextField(
-      {super.key,
-      this.onChanged,
-      this.width,
-      required this.hint,
-       this.icon,
-      required this.controller,
-      this.keyboardType});
+  const CustomTextField({
+    super.key,
+    this.onChanged,
+    this.width,
+    required this.hint,
+    this.icon,
+    required this.controller,
+    this.keyboardType,
+    this.obscure = false,
+  });
   final Function(String)? onChanged;
   final double? width;
   final String hint;
   final Widget? icon;
   final TextEditingController controller;
   final TextInputType? keyboardType;
+  final bool obscure;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +40,7 @@ class CustomTextField extends StatelessWidget {
         controller: controller,
         onChanged: onChanged,
         keyboardType: keyboardType,
+        obscureText: obscure,
         decoration: InputDecoration(
           hintText: hint,
           icon: icon,

@@ -13,8 +13,10 @@ import 'package:quantify/features/dashboard/domain/entity/ticket.dart';
 import 'package:quantify/features/dashboard/presentation/blocs/tickets_bloc.dart';
 import 'package:quantify/features/dashboard/presentation/blocs/tickets_event.dart';
 import 'package:quantify/features/dashboard/presentation/blocs/tickets_state.dart';
+import 'package:quantify/service_locator.dart';
 import 'package:quantify/shared/widgets/custom_filled_text_field.dart';
 import 'package:quantify/shared/widgets/main_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddEditTicketScreen extends StatefulWidget {
   final TicketEntity? selectedTicket;
@@ -53,6 +55,7 @@ class _AddEditTicketScreenState extends State<AddEditTicketScreen> {
     final height = context.deviceSize.height;
     final width = context.deviceSize.width;
     String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
+    final shopId = sl<SharedPreferences>().getInt('shopId');
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -146,7 +149,8 @@ class _AddEditTicketScreenState extends State<AddEditTicketScreen> {
                     const SizedBox(width: 10),
                     GestureDetector(
                       onTap: () {
-                        context.navigator.pushNamed(AppRouter.addEditClientPage);
+                        context.navigator
+                            .pushNamed(AppRouter.addEditClientPage);
                       },
                       child: Container(
                         width: width * 0.15,
@@ -345,6 +349,7 @@ class _AddEditTicketScreenState extends State<AddEditTicketScreen> {
                           clientName: selectedClient?.name ??
                               widget.selectedTicket!.clientName,
                           clientPhone: selectedClient?.phone ?? phoneText!,
+                          shopId: shopId!,
                         );
 
                         context
@@ -366,6 +371,7 @@ class _AddEditTicketScreenState extends State<AddEditTicketScreen> {
                           clientId: selectedClient!.id!,
                           clientName: selectedClient!.name,
                           clientPhone: selectedClient!.phone,
+                          shopId: shopId!,
                         );
                         context
                             .read<TicketsBloc>()

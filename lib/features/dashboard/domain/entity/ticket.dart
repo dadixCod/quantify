@@ -11,6 +11,7 @@ class TicketEntity {
   final int clientId;
   final String clientName;
   final String clientPhone;
+  final int shopId;
   bool isDone;
 
   TicketEntity({
@@ -23,6 +24,7 @@ class TicketEntity {
     required this.clientId,
     required this.clientName,
     required this.clientPhone,
+    required this.shopId,
     this.isDone = false,
   });
 
@@ -36,6 +38,7 @@ class TicketEntity {
     int? clientId,
     String? clientName,
     String? clientPhone,
+    int? shopId,
     bool? isDone,
   }) {
     return TicketEntity(
@@ -48,12 +51,13 @@ class TicketEntity {
       clientId: clientId ?? this.clientId,
       clientName: clientName ?? this.clientName,
       clientPhone: clientPhone ?? this.clientPhone,
+      shopId: shopId ?? this.shopId,
       isDone: isDone ?? this.isDone,
     );
   }
 
   @override
   String toString() {
-    return 'TicketEntity(id: $id, number: $number, date: $date, time: $time, price: $price, dept: $dept, clientId: $clientId, clientName: $clientName, clientPhone: $clientPhone, isDone: $isDone)';
+    return 'TicketEntity(id: $id, number: $number, date: $date, time: $time, price: $price, dept: $dept, clientId: $clientId, clientName: $clientName, clientPhone: $clientPhone, isDone: $isDone, shopId: $shopId)';
   }
 }

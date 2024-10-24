@@ -9,8 +9,10 @@ import 'package:quantify/features/clients/presentation/blocs/clients_event.dart'
 import 'package:quantify/features/clients/presentation/blocs/clients_state.dart';
 import 'package:quantify/features/dashboard/presentation/blocs/tickets_bloc.dart';
 import 'package:quantify/features/dashboard/presentation/blocs/tickets_event.dart';
+import 'package:quantify/service_locator.dart';
 import 'package:quantify/shared/widgets/custom_filled_text_field.dart';
 import 'package:quantify/shared/widgets/main_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddEditClientPage extends StatefulWidget {
   final ClientEntity? selectedClient;
@@ -50,6 +52,7 @@ class _AddEditClientPageState extends State<AddEditClientPage> {
     final height = context.deviceSize.height;
     final width = context.deviceSize.width;
     final fromEdit = widget.selectedClient != null;
+final shopId = sl<SharedPreferences>().getInt('shopId');
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -104,6 +107,7 @@ class _AddEditClientPageState extends State<AddEditClientPage> {
                       visits: widget.selectedClient!.visits,
                       totalSpent: widget.selectedClient!.totalSpent,
                       dept: widget.selectedClient!.dept,
+                      shopId: shopId!,
                     );
                     context
                         .read<ClientsBloc>()
@@ -115,6 +119,7 @@ class _AddEditClientPageState extends State<AddEditClientPage> {
                       visits: 0,
                       totalSpent: 0,
                       dept: 0,
+                      shopId: shopId!,
                     );
 
                     context.read<ClientsBloc>().add(

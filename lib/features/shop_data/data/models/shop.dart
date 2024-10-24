@@ -8,6 +8,8 @@ class ShopModel extends ShopEntity {
     super.address,
     required super.startHour,
     required super.endHour,
+    required super.email,
+    required super.password,
   });
 
   factory ShopModel.fromJson(Map<String, dynamic> data) {
@@ -18,6 +20,8 @@ class ShopModel extends ShopEntity {
       phoneNumber: data['phone'],
       startHour: data['start'],
       endHour: data['end'],
+      email: data['email'],
+      password: data['password'],
     );
   }
 
@@ -29,6 +33,8 @@ class ShopModel extends ShopEntity {
       address: entity.address,
       startHour: entity.startHour,
       endHour: entity.endHour,
+      email: entity.email,
+      password: entity.password,
     );
   }
 }
