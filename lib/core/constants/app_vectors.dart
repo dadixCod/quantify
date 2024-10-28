@@ -20,6 +20,9 @@ class AppVectors {
   static const support = 'assets/vectors/support.svg';
   static const call = 'assets/vectors/call.svg';
   static const delete = 'assets/vectors/delete.svg';
+  static const user = 'assets/vectors/user.svg';
+  static const theme = 'assets/vectors/theme.svg';
+  static const biometrics = 'assets/vectors/biometrics.svg';
   static const noTickets = 'assets/lottie/tickets.json';
   static const addTicket = 'assets/lottie/add.json';
   static const funnel = 'assets/vectors/funnel.svg';

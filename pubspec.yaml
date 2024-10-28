@@ -8,9 +8,11 @@ environment:
 
 dependencies:
   animate_do: ^3.3.4
+  animated_toggle_switch: ^0.8.3
   country_code_picker: ^3.0.0
   easy_url_launcher: ^0.0.7
   equatable: ^2.0.5
+  fl_chart: ^0.69.0
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.6

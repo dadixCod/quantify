@@ -14,7 +14,6 @@ List<DrawerItem> drawerItems = [
   DrawerItem(title: 'Dashboard', icon: AppVectors.dashboard),
   DrawerItem(title: 'Clients', icon: AppVectors.clients),
   DrawerItem(title: 'Statistics', icon: AppVectors.statistics),
-  DrawerItem(title: 'Profile', icon: AppVectors.profile),
   DrawerItem(title: 'Settings', icon: AppVectors.settings),
   DrawerItem(title: 'Support', icon: AppVectors.support),
 ];

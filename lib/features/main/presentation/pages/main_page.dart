@@ -10,7 +10,7 @@ import 'package:quantify/features/dashboard/presentation/pages/dashboard_page.da
 import 'package:quantify/features/drawer/presentation/cubit/drawer_cubit.dart';
 import 'package:quantify/features/drawer/presentation/pages/custom_drawer.dart';
 import 'package:quantify/features/main/presentation/blocs/drawer_cubit.dart';
-import 'package:quantify/features/profile/pages/profile_page.dart';
+
 import 'package:quantify/features/settings/pages/settings_page.dart';
 import 'package:quantify/features/statistics/pages/statistics_page.dart';
 import 'package:quantify/features/support/pages/support_page.dart';
@@ -150,7 +150,6 @@ List<Widget> pages = [
   const DashboardPage(),
   const ClientsPage(),
   const StatisticsPage(),
-  const ProfilePage(),
   const SettingsPage(),
   const SupportPage(),
 ];
