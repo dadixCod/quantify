@@ -9,6 +9,7 @@ import 'package:quantify/core/utils/context.dart';
 import 'package:quantify/features/drawer/presentation/cubit/drawer_cubit.dart';
 import 'package:quantify/features/shop_data/presentation/blocs/shop_bloc.dart';
 import 'package:quantify/features/shop_data/presentation/blocs/shop_event.dart';
+import 'package:quantify/shared/thememode/theme_cubit.dart';
 import 'package:quantify/shared/widgets/dialogs.dart';
 import 'package:quantify/shared/widgets/simple_app_bar.dart';
 
@@ -48,7 +49,6 @@ class _SettingsPageState extends State<SettingsPage> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 5),
           const Text(
             'mehdielouissi8@gmail.com',
             style: TextStyle(
@@ -57,7 +57,7 @@ class _SettingsPageState extends State<SettingsPage> {
               color: Colors.grey,
             ),
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: 25),
           SizedBox(
             height: 40,
             width: width * 0.25,
@@ -108,8 +108,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  child: ListView(
-                    padding: EdgeInsets.zero,
+                  child: Column(
                     children: [
                       PreferencesRowItem(
                         title: 'Notifications',
@@ -131,65 +130,73 @@ class _SettingsPageState extends State<SettingsPage> {
                         thickness: 1,
                       ),
                       const SizedBox(height: 5),
-                      PreferencesRowItem(
-                        title: 'Theme',
-                        iconPath: AppVectors.theme,
-                        trailingWidget: SizedBox(
-                          height: 30,
-                          width: width * 0.3,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: isLight
-                                  ? AppColors.bgColor
-                                  : AppColors.darkBgColor,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                icon: const Icon(
-                                  Icons.keyboard_arrow_down_rounded,
+                      BlocBuilder<ThemeCubit,ThemeMode>(
+                        builder: (context,theme) {
+                          return PreferencesRowItem(
+                            title: 'Theme',
+                            iconPath: AppVectors.theme,
+                            trailingWidget: SizedBox(
+                              height: 30,
+                              width: width * 0.3,
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: isLight
+                                      ? AppColors.bgColor
+                                      : AppColors.darkBgColor,
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                padding:
-                                    const EdgeInsets.only(left: 10, right: 5),
-                                borderRadius: BorderRadius.circular(10),
-                                value: 0,
-                                items: const [
-                                  DropdownMenuItem(
-                                    value: 0,
-                                    child: Text(
-                                      'System',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton(
+                                    icon: const Icon(
+                                      Icons.keyboard_arrow_down_rounded,
                                     ),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 1,
-                                    child: Text(
-                                      'Light',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w500,
+                                    padding:
+                                        const EdgeInsets.only(left: 10, right: 5),
+                                    borderRadius: BorderRadius.circular(10),
+                                    value: theme,
+                                    items: const [
+                                      DropdownMenuItem(
+                                        value: ThemeMode.system,
+                                        child: Text(
+                                          'System',
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 2,
-                                    child: Text(
-                                      'Dark',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w500,
+                                      DropdownMenuItem(
+                                        value: ThemeMode.light,
+                                        child: Text(
+                                          'Light',
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                      DropdownMenuItem(
+                                        value: ThemeMode.dark,
+                                        child: Text(
+                                          'Dark',
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                    onChanged: (value) {
+                                      context
+                                          .read<ThemeCubit>()
+                                          .updateTheme(value!);
+                                    },
                                   ),
-                                ],
-                                onChanged: (value) {},
+                                ),
                               ),
                             ),
-                          ),
-                        ),
+                          );
+                        }
                       ),
                       const SizedBox(height: 5),
                       const Divider(
@@ -214,13 +221,17 @@ class _SettingsPageState extends State<SettingsPage> {
                         thickness: 1,
                       ),
                       const SizedBox(height: 5),
-                      PreferencesRowItem(
-                        title: 'About',
-                        iconPath: AppVectors.profile,
-                        trailingWidget: GestureDetector(
-                          onTap: () {},
-                          child: const Icon(
-                            Icons.keyboard_arrow_right_rounded,
+                      InkWell(
+                        onTap: () {},
+                        splashColor: AppColors.bgColor.withOpacity(0.2),
+                        child: PreferencesRowItem(
+                          title: 'About',
+                          iconPath: AppVectors.profile,
+                          trailingWidget: GestureDetector(
+                            onTap: () {},
+                            child: const Icon(
+                              Icons.keyboard_arrow_right_rounded,
+                            ),
                           ),
                         ),
                       ),
@@ -230,11 +241,12 @@ class _SettingsPageState extends State<SettingsPage> {
                         thickness: 1,
                       ),
                       const SizedBox(height: 5),
-                      GestureDetector(
+                      InkWell(
                         onTap: () {
                           BlocProvider.of<DrawerItemCubit>(context)
                               .changeIndex(4);
                         },
+                        splashColor: AppColors.bgColor.withOpacity(0.2),
                         child: PreferencesRowItem(
                           title: 'Support',
                           iconPath: AppVectors.support,
@@ -251,7 +263,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         thickness: 1,
                       ),
                       const SizedBox(height: 5),
-                      GestureDetector(
+                      InkWell(
+                        splashColor: AppColors.bgColor.withOpacity(0.2),
                         onTap: () async {
                           final result = await confirmationDialog(
                             context,

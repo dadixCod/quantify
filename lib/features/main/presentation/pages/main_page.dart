@@ -30,7 +30,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    _lottieController = AnimationController(vsync: this);
+    _lottieController = AnimationController(
+      vsync: this,
+    );
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
@@ -66,7 +68,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     if (drawerCubit.state) {
       _lottieController.reverse();
       _animationController.reverse();
+      _lottieController.value = -1.5;
     } else {
+      _lottieController.value = 1.5;
       _lottieController.forward();
       _animationController.forward();
     }
@@ -120,7 +124,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 ),
               ),
               AnimatedPositioned(
-                duration: const Duration(milliseconds: 300),
+                duration: const Duration(milliseconds: 200),
                 top: state ? 80 : 40,
                 left: state ? 260 : 10,
                 child: GestureDetector(
